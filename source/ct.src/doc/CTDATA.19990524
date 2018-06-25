@@ -1,0 +1,657 @@
+/* Extract Database dgnt01:d:\gdb\ctdata\ctdata.gdb */
+CREATE DATABASE "dgnt01:d:\gdb\ctdata\ctdata.gdb" PAGE_SIZE 2048 
+;
+
+
+/* Table: CATEGORY, Owner: SYSDBA */
+CREATE TABLE CATEGORY (CATEGORY CHAR(4) NOT NULL,
+        DESCRIPTION VARCHAR(30) CHARACTER SET BIG_5,
+PRIMARY KEY (CATEGORY));
+
+/* Table: JOB, Owner: SYSDBA */
+CREATE TABLE JOB (JOB_NO CHAR(7) NOT NULL,
+        DESCRIPTION VARCHAR(30) CHARACTER SET BIG_5,
+        QUOT_NO CHAR(7),
+        KEYWORD VARCHAR(20),
+PRIMARY KEY (JOB_NO));
+
+/* Table: SUB_JOB, Owner: SYSDBA */
+CREATE TABLE SUB_JOB (JOB_NO CHAR(7) NOT NULL,
+        LINE_NO INTEGER NOT NULL,
+        QTY NUMERIC(9, 3) DEFAULT 0
+,
+        JLENGTH NUMERIC(9, 3) DEFAULT 0
+,
+        JWIDTH NUMERIC(9, 3) DEFAULT 0
+,
+        JHEIGHT NUMERIC(9, 3) DEFAULT 0
+,
+        LAST_UPD_DATE DATE,
+        STATUS CHAR(1) DEFAULT "W"
+,
+        AUTHORIED_BY VARCHAR(10),
+        COMMENT BLOB SUB_TYPE 0 SEGMENT SIZE 80,
+        SUB_JOB_CAT CHAR(4),
+        PHOTO BLOB SUB_TYPE 0 SEGMENT SIZE 80,
+        DESCRIPTION VARCHAR(60) CHARACTER SET BIG_5,
+        SUB_JOB_NO VARCHAR(30),
+        QUOT_LINE_NO VARCHAR(60),
+        UNIT CHAR(5) CHARACTER SET BIG_5,
+        CREATED_BY CHAR(4) CHARACTER SET BIG_5,
+PRIMARY KEY (JOB_NO, LINE_NO));
+
+/* Table: SUB_JOB_COST, Owner: SYSDBA */
+CREATE TABLE SUB_JOB_COST (JOB_NO CHAR(7) NOT NULL,
+        LINE_NO INTEGER NOT NULL,
+        COST_CAT CHAR(7) NOT NULL,
+        BUDGET_QTY NUMERIC(9, 3) DEFAULT 0
+,
+        BUDGET_AMT NUMERIC(9, 2) DEFAULT 0
+,
+        ACTUAL_QTY NUMERIC(9, 3) DEFAULT 0
+,
+        ACTUAL_AMT NUMERIC(9, 2) DEFAULT 0
+,
+        STD_QTY NUMERIC(9, 3) DEFAULT 0
+,
+        STD_AMOUNT NUMERIC(9, 2) DEFAULT 0
+,
+        SECTION_NO CHAR(1) DEFAULT "0"
+,
+        QUOT_ITEM_NO CHAR(7),
+        QTY_UNIT CHAR(10) CHARACTER SET BIG_5,
+        DESCRIPTION CHAR(15) CHARACTER SET BIG_5,
+        CATEGORY CHAR(7),
+PRIMARY KEY (JOB_NO, LINE_NO, COST_CAT));
+
+
+COMMIT WORK;
+SET AUTODDL OFF;
+SET TERM ^ ;
+
+/* Stored procedures */
+CREATE PROCEDURE QS_IMPORT AS BEGIN EXIT; END ^
+CREATE PROCEDURE COST_IMPORT AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_COST_CAT_AMT AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_COST_CAT_QTY AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_JOB_COST AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_JOB_COST_SUMMARY AS BEGIN EXIT; END ^
+
+ALTER PROCEDURE QS_IMPORT (JOBNO CHAR(7),
+STARTLINENO INTEGER,
+ENDLINENO INTEGER)
+AS 
+     
+begin
+
+   update sub_job_cost
+   set budget_qty = 0,
+       budget_amt = 0
+   where
+     (Job_No = :JobNo) and
+     (Line_No >= :StartLineNo) and
+     (Line_No <= :EndLineNo) and 
+     (line_no in 
+       (select line_no from sub_job 
+          where (Job_No = :JobNo) and 
+                (Status <> 'C') and
+                (Line_No >= :StartLineNo) and
+                (Line_No <= :EndLineNo) 
+        )
+      );
+
+   delete from sub_job_cost
+     where (Actual_Qty = 0)
+       and (Actual_Amt = 0)
+       and (Std_Qty = 0)
+       and (Std_Amount = 0)
+       and (Job_No = :JobNo)
+       and (Line_No >= :StartLineNo)
+       and (Line_No <= :EndLineNo) 
+       and (line_no in 
+             (select line_no from sub_job 
+                 where (Job_No = :JobNo) and
+                       (Status <> 'C') and
+                       (Line_No >= :StartLineNo) and
+                       (Line_No <= :EndLineNo) 
+              )
+            );
+end
+ ^
+
+ALTER PROCEDURE COST_IMPORT (JOBNO CHAR(7),
+STARTLINENO INTEGER,
+ENDLINENO INTEGER)
+AS 
+            
+declare variable wLineNo Integer;
+begin
+
+   for select line_no from sub_job
+         where Job_No = :JobNo
+           and Line_No >= :StartLineNo
+           and Line_No <= :EndLineNo
+           and Status <> 'C'
+        into :wLineNo
+   do
+   begin
+     update sub_job_cost  
+       set actual_qty = 0,
+           actual_amt = 0
+       where Job_No = :JobNo
+       and Line_No = :wLineNo;
+   end
+
+   delete from sub_job_cost
+     where Budget_Qty = 0
+       and Budget_Amt = 0
+       and Std_Qty = 0
+       and Std_Amount = 0
+       and Actual_Qty = 0
+       and Actual_Amt = 0
+       and Job_No = :JobNo;
+end
+ ^
+
+ALTER PROCEDURE GET_COST_CAT_AMT (IJOBNO CHAR(7),
+ICOST_CAT1 CHAR(7),
+ICOST_CAT2 CHAR(7),
+ICOST_CAT3 CHAR(7),
+ICOST_CAT4 CHAR(7),
+ICOST_CAT5 CHAR(7),
+ICOST_CAT6 CHAR(7))
+RETURNS (OJOBNO CHAR(7),
+OLINENO INTEGER,
+OQTY INTEGER,
+OCOST_CAT1_BUD_AMT NUMERIC(15, 2),
+OCOST_CAT1_ACT_AMT NUMERIC(15, 2),
+OCOST_CAT1_STD_AMT NUMERIC(15, 2),
+OCOST_CAT2_BUD_AMT NUMERIC(15, 2),
+OCOST_CAT2_ACT_AMT NUMERIC(15, 2),
+OCOST_CAT2_STD_AMT NUMERIC(15, 2),
+OCOST_CAT3_BUD_AMT NUMERIC(15, 2),
+OCOST_CAT3_ACT_AMT NUMERIC(15, 2),
+OCOST_CAT3_STD_AMT NUMERIC(15, 2),
+OCOST_CAT4_BUD_AMT NUMERIC(15, 2),
+OCOST_CAT4_ACT_AMT NUMERIC(15, 2),
+OCOST_CAT4_STD_AMT NUMERIC(15, 2),
+OCOST_CAT5_BUD_AMT NUMERIC(15, 2),
+OCOST_CAT5_ACT_AMT NUMERIC(15, 2),
+OCOST_CAT5_STD_AMT NUMERIC(15, 2),
+OCOST_CAT6_BUD_AMT NUMERIC(15, 2),
+OCOST_CAT6_ACT_AMT NUMERIC(15, 2),
+OCOST_CAT6_STD_AMT NUMERIC(15, 2))
+AS 
+    
+Declare variable wLineQty numeric(12,3);
+begin
+  for 
+    select Line_No, Qty
+      from Sub_Job  
+    where Job_No = :iJobNo
+      into :olineno, :wLineQty
+    do
+    begin
+      OJOBNO = :iJobNo;
+      OQTY = :wLineQty;
+      OCOST_CAT1_BUD_AMT = 0;
+      OCOST_CAT1_ACT_AMT = 0;
+      OCOST_CAT1_STD_AMT = 0;
+      OCOST_CAT2_BUD_AMT = 0;
+      OCOST_CAT2_ACT_AMT = 0;
+      OCOST_CAT2_STD_AMT = 0;
+      OCOST_CAT3_BUD_AMT = 0;
+      OCOST_CAT3_ACT_AMT = 0;
+      OCOST_CAT3_STD_AMT = 0;
+      OCOST_CAT4_BUD_AMT = 0;
+      OCOST_CAT4_ACT_AMT = 0;
+      OCOST_CAT4_STD_AMT = 0;
+      OCOST_CAT5_BUD_AMT = 0;
+      OCOST_CAT5_ACT_AMT = 0;
+      OCOST_CAT5_STD_AMT = 0;
+      OCOST_CAT6_BUD_AMT = 0;
+      OCOST_CAT6_ACT_AMT = 0;
+      OCOST_CAT6_STD_AMT = 0;
+      if (:iCOST_CAT1 <> '') then
+      begin
+        select sum(Budget_AMT),
+               sum(Actual_AMT),
+               sum(Std_AMOUNT)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNo and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat1
+        into :oCost_Cat1_Bud_AMT, 
+             :oCost_Cat1_Act_AMT,
+             :oCost_Cat1_Std_AMT;
+      end  
+      if (:iCOST_CAT2 <> '') then
+      begin
+        select sum(Budget_AMT),
+               sum(Actual_AMT),
+               sum(Std_AMOUNT)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNO and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat2
+        into :oCost_Cat2_Bud_AMT, 
+             :oCost_Cat2_Act_AMT,
+             :oCost_Cat2_Std_AMT;
+      end  
+      if (:iCOST_CAT3 <> '') then
+      begin
+        select sum(Budget_AMT),
+               sum(Actual_AMT),
+               sum(Std_AMOUNT)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNO and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat3
+        into :oCost_Cat3_Bud_AMT, 
+             :oCost_Cat3_Act_AMT,
+             :oCost_Cat3_Std_AMT;
+      end
+      if (:iCOST_CAT4 <> '') then
+      begin
+        select sum(Budget_AMT),
+               sum(Actual_AMT),
+               sum(Std_AMOUNT)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNO and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat4
+        into :oCost_Cat4_Bud_AMT, 
+             :oCost_Cat4_Act_AMT,
+             :oCost_Cat4_Std_AMT;
+      end  
+      if (:iCOST_CAT5 <> '') then
+      begin
+        select sum(Budget_AMT),
+               sum(Actual_AMT),
+               sum(Std_AMOUNT)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNO and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat5
+        into :oCost_Cat5_Bud_AMT, 
+             :oCost_Cat5_Act_AMT,
+             :oCost_Cat5_Std_AMT;
+      end
+      if (:iCOST_CAT6 <> '') then
+      begin
+        select sum(Budget_AMT),
+               sum(Actual_AMT),
+               sum(Std_AMOUNT)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNO and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat6
+        into :oCost_Cat6_Bud_AMT, 
+             :oCost_Cat6_Act_AMT,
+             :oCost_Cat6_Std_AMT;
+      end  
+      if ((:oCost_Cat1_BUD_AMT <> 0) or
+           (:oCost_Cat1_ACT_AMT <> 0) or
+           (:oCost_Cat1_STD_AMT <> 0) or
+           (:oCost_Cat2_BUD_AMT <> 0) or
+           (:oCost_Cat2_ACT_AMT <> 0) or
+           (:oCost_Cat2_STD_AMT <> 0) or
+           (:oCost_Cat3_BUD_AMT <> 0) or
+           (:oCost_Cat3_ACT_AMT <> 0) or
+           (:oCost_Cat3_STD_AMT <> 0) or
+           (:oCost_Cat4_BUD_AMT <> 0) or
+           (:oCost_Cat4_ACT_AMT <> 0) or
+           (:oCost_Cat4_STD_AMT <> 0) or
+           (:oCost_Cat5_BUD_AMT <> 0) or
+           (:oCost_Cat5_ACT_AMT <> 0) or
+           (:oCost_Cat5_STD_AMT <> 0) or
+           (:oCost_Cat6_BUD_AMT <> 0) or
+           (:oCost_Cat6_ACT_AMT <> 0) or
+           (:oCost_Cat6_STD_AMT <> 0))  then
+        oCost_Cat1_BUD_AMT = :oCost_Cat1_BUD_AMT * :wLineQty;
+        oCost_Cat1_ACT_AMT = :oCost_Cat1_ACT_AMT * :wLineQty;
+        oCost_Cat1_STD_AMT = :oCost_Cat1_STD_AMT * :wLineQty;
+        oCost_Cat2_BUD_AMT = :oCost_Cat2_BUD_AMT * :wLineQty;
+        oCost_Cat2_ACT_AMT = :oCost_Cat2_ACT_AMT * :wLineQty;
+        oCost_Cat2_STD_AMT = :oCost_Cat2_STD_AMT * :wLineQty;
+        oCost_Cat3_BUD_AMT = :oCost_Cat3_BUD_AMT * :wLineQty;
+        oCost_Cat3_ACT_AMT = :oCost_Cat3_ACT_AMT * :wLineQty;
+        oCost_Cat3_STD_AMT = :oCost_Cat3_STD_AMT * :wLineQty;
+        oCost_Cat4_BUD_AMT = :oCost_Cat4_BUD_AMT * :wLineQty;
+        oCost_Cat4_ACT_AMT = :oCost_Cat4_ACT_AMT * :wLineQty;
+        oCost_Cat4_STD_AMT = :oCost_Cat4_STD_AMT * :wLineQty;
+        oCost_Cat5_BUD_AMT = :oCost_Cat5_BUD_AMT * :wLineQty;
+        oCost_Cat5_ACT_AMT = :oCost_Cat5_ACT_AMT * :wLineQty;
+        oCost_Cat5_STD_AMT = :oCost_Cat5_STD_AMT * :wLineQty;
+        oCost_Cat6_BUD_AMT = :oCost_Cat6_BUD_AMT * :wLineQty;
+        oCost_Cat6_ACT_AMT = :oCost_Cat6_ACT_AMT * :wLineQty;
+        oCost_Cat6_STD_AMT = :oCost_Cat6_STD_AMT * :wLineQty;
+        suspend;
+    end
+end
+ ^
+
+ALTER PROCEDURE GET_COST_CAT_QTY (IJOBNO CHAR(7),
+ICOST_CAT1 CHAR(7),
+ICOST_CAT2 CHAR(7),
+ICOST_CAT3 CHAR(7),
+ICOST_CAT4 CHAR(7),
+ICOST_CAT5 CHAR(7),
+ICOST_CAT6 CHAR(7))
+RETURNS (OJOBNO CHAR(7),
+OLINENO INTEGER,
+OQTY INTEGER,
+OCOST_CAT1_BUD_QTY NUMERIC(15, 3),
+OCOST_CAT1_ACT_QTY NUMERIC(15, 3),
+OCOST_CAT1_STD_QTY NUMERIC(15, 3),
+OCOST_CAT2_BUD_QTY NUMERIC(15, 3),
+OCOST_CAT2_ACT_QTY NUMERIC(15, 3),
+OCOST_CAT2_STD_QTY NUMERIC(15, 3),
+OCOST_CAT3_BUD_QTY NUMERIC(15, 3),
+OCOST_CAT3_ACT_QTY NUMERIC(15, 3),
+OCOST_CAT3_STD_QTY NUMERIC(15, 3),
+OCOST_CAT4_BUD_QTY NUMERIC(15, 3),
+OCOST_CAT4_ACT_QTY NUMERIC(15, 3),
+OCOST_CAT4_STD_QTY NUMERIC(15, 3),
+OCOST_CAT5_BUD_QTY NUMERIC(15, 3),
+OCOST_CAT5_ACT_QTY NUMERIC(15, 3),
+OCOST_CAT5_STD_QTY NUMERIC(15, 3),
+OCOST_CAT6_BUD_QTY NUMERIC(15, 3),
+OCOST_CAT6_ACT_QTY NUMERIC(15, 3),
+OCOST_CAT6_STD_QTY NUMERIC(15, 3))
+AS 
+    
+Declare variable wLineQty numeric(12,3);
+begin
+  for 
+    select Line_No, Qty
+      from Sub_Job  
+    where Job_No = :iJobNo
+      into :olineno, :wLineQty
+    do
+    begin
+      OJOBNO = :iJobNo;
+      OQTY = :wLineQty;
+      OCOST_CAT1_BUD_QTY = 0;
+      OCOST_CAT1_ACT_QTY = 0;
+      OCOST_CAT1_STD_QTY = 0;
+      OCOST_CAT2_BUD_QTY = 0;
+      OCOST_CAT2_ACT_QTY = 0;
+      OCOST_CAT2_STD_QTY = 0;
+      OCOST_CAT3_BUD_QTY = 0;
+      OCOST_CAT3_ACT_QTY = 0;
+      OCOST_CAT3_STD_QTY = 0;
+      OCOST_CAT4_BUD_QTY = 0;
+      OCOST_CAT4_ACT_QTY = 0;
+      OCOST_CAT4_STD_QTY = 0;
+      OCOST_CAT5_BUD_QTY = 0;
+      OCOST_CAT5_ACT_QTY = 0;
+      OCOST_CAT5_STD_QTY = 0;
+      OCOST_CAT6_BUD_QTY = 0;
+      OCOST_CAT6_ACT_QTY = 0;
+      OCOST_CAT6_STD_QTY = 0;
+      if (:iCOST_CAT1 <> '') then
+      begin
+        select sum(Budget_Qty),
+               sum(Actual_Qty),
+               sum(Std_Qty)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNo and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat1
+        into :oCost_Cat1_Bud_qty, 
+             :oCost_Cat1_Act_Qty,
+             :oCost_Cat1_Std_Qty;
+      end  
+      if (:iCOST_CAT2 <> '') then
+      begin
+        select sum(Budget_Qty),
+               sum(Actual_Qty),
+               sum(Std_Qty)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNO and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat2
+        into :oCost_Cat2_Bud_qty, 
+             :oCost_Cat2_Act_Qty,
+             :oCost_Cat2_Std_Qty;
+      end  
+      if (:iCOST_CAT3 <> '') then
+      begin
+        select sum(Budget_Qty),
+               sum(Actual_Qty),
+               sum(Std_Qty)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNO and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat3
+        into :oCost_Cat3_Bud_qty, 
+             :oCost_Cat3_Act_Qty,
+             :oCost_Cat3_Std_Qty;
+      end
+      if (:iCOST_CAT4 <> '') then
+      begin
+        select sum(Budget_Qty),
+               sum(Actual_Qty),
+               sum(Std_Qty)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNO and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat4
+        into :oCost_Cat4_Bud_qty, 
+             :oCost_Cat4_Act_Qty,
+             :oCost_Cat4_Std_Qty;
+      end  
+      if (:iCOST_CAT5 <> '') then
+      begin
+        select sum(Budget_Qty),
+               sum(Actual_Qty),
+               sum(Std_Qty)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNO and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat5
+        into :oCost_Cat5_Bud_qty, 
+             :oCost_Cat5_Act_Qty,
+             :oCost_Cat5_Std_Qty;
+      end
+      if (:iCOST_CAT6 <> '') then
+      begin
+        select sum(Budget_Qty),
+               sum(Actual_Qty),
+               sum(Std_Qty)
+        from Sub_Job_Cost 
+        where Job_No = :iJobNO and 
+              line_no = :olineno and
+              Cost_Cat = :iCost_Cat6
+        into :oCost_Cat6_Bud_qty, 
+             :oCost_Cat6_Act_Qty,
+             :oCost_Cat6_Std_Qty;
+      end  
+      if ((:oCost_Cat1_BUD_Qty <> 0) or
+           (:oCost_Cat1_ACT_Qty <> 0) or
+           (:oCost_Cat1_STD_Qty <> 0) or
+           (:oCost_Cat2_BUD_Qty <> 0) or
+           (:oCost_Cat2_ACT_Qty <> 0) or
+           (:oCost_Cat2_STD_Qty <> 0) or
+           (:oCost_Cat3_BUD_Qty <> 0) or
+           (:oCost_Cat3_ACT_Qty <> 0) or
+           (:oCost_Cat3_STD_Qty <> 0) or
+           (:oCost_Cat4_BUD_Qty <> 0) or
+           (:oCost_Cat4_ACT_Qty <> 0) or
+           (:oCost_Cat4_STD_Qty <> 0) or
+           (:oCost_Cat5_BUD_Qty <> 0) or
+           (:oCost_Cat5_ACT_Qty <> 0) or
+           (:oCost_Cat5_STD_Qty <> 0) or
+           (:oCost_Cat6_BUD_Qty <> 0) or
+           (:oCost_Cat6_ACT_Qty <> 0) or
+           (:oCost_Cat6_STD_Qty <> 0))  then
+        oCost_Cat1_BUD_Qty = :oCost_Cat1_BUD_Qty * :wLineQty;
+        oCost_Cat1_ACT_Qty = :oCost_Cat1_ACT_Qty * :wLineQty;
+        oCost_Cat1_STD_Qty = :oCost_Cat1_STD_Qty * :wLineQty;
+        oCost_Cat2_BUD_Qty = :oCost_Cat2_BUD_Qty * :wLineQty;
+        oCost_Cat2_ACT_Qty = :oCost_Cat2_ACT_Qty * :wLineQty;
+        oCost_Cat2_STD_Qty = :oCost_Cat2_STD_Qty * :wLineQty;
+        oCost_Cat3_BUD_Qty = :oCost_Cat3_BUD_Qty * :wLineQty;
+        oCost_Cat3_ACT_Qty = :oCost_Cat3_ACT_Qty * :wLineQty;
+        oCost_Cat3_STD_Qty = :oCost_Cat3_STD_Qty * :wLineQty;
+        oCost_Cat4_BUD_Qty = :oCost_Cat4_BUD_Qty * :wLineQty;
+        oCost_Cat4_ACT_Qty = :oCost_Cat4_ACT_Qty * :wLineQty;
+        oCost_Cat4_STD_Qty = :oCost_Cat4_STD_Qty * :wLineQty;
+        oCost_Cat5_BUD_Qty = :oCost_Cat5_BUD_Qty * :wLineQty;
+        oCost_Cat5_ACT_Qty = :oCost_Cat5_ACT_Qty * :wLineQty;
+        oCost_Cat5_STD_Qty = :oCost_Cat5_STD_Qty * :wLineQty;
+        oCost_Cat6_BUD_Qty = :oCost_Cat6_BUD_Qty * :wLineQty;
+        oCost_Cat6_ACT_Qty = :oCost_Cat6_ACT_Qty * :wLineQty;
+        oCost_Cat6_STD_Qty = :oCost_Cat6_STD_Qty * :wLineQty;
+        suspend;
+    end
+end
+ ^
+
+ALTER PROCEDURE GET_JOB_COST (IJOBNO CHAR(7))
+RETURNS (OJOB_NO CHAR(7),
+OSECTION_NO CHAR(1),
+OCOST_CAT CHAR(7),
+OSUM_BUG_QTY NUMERIC(15, 3),
+OSUM_BUG_AMT NUMERIC(15, 2),
+OSUM_ACT_QTY NUMERIC(15, 3),
+OSUM_ACT_AMT NUMERIC(15, 2),
+OSUM_STD_QTY NUMERIC(15, 3),
+OSUM_STD_AMT NUMERIC(15, 2))
+AS 
+       
+begin
+  for 
+    select
+      job_no,
+      section_no,
+      cost_cat,
+      sum(QTY * budget_qty)  Budget_Qty,
+      sum(QTY * budget_amt)  Budget_Amt,
+      sum(QTY * actual_qty)   Actual_Qty,
+      sum(QTY * actual_amt)  Actual_Amt,
+      sum(QTY * std_qty)  Std_Qty, 
+      sum(QTY * std_amount) Std_Amt
+    from  
+      Sub_Job_Cost sjc, SUB_JOB SJ
+    where 
+      sjc.Job_No = 'FCXBV00' AND
+      SJC.LINE_NO = SJ.LINE_NO AND
+      SJC.JOB_NO = SJ.JOB_NO
+    group by 
+      Job_No, Section_No, Cost_Cat
+    order by
+      Section_No, Cost_Cat
+    into
+      OJOB_NO,
+      OSECTION_NO,
+      OCOST_CAT,
+      OSUM_BUG_QTY,
+      OSUM_BUG_AMT,
+      OSUM_ACT_QTY,
+      OSUM_ACT_AMT,
+      OSUM_STD_QTY,
+      OSUM_STD_AMT
+  do
+    suspend;  
+end
+ ^
+
+ALTER PROCEDURE GET_JOB_COST_SUMMARY (IJOB_NO CHAR(7))
+RETURNS (OJOB_NO CHAR(7),
+OSECTION_NO INTEGER,
+OCOST_CAT CHAR(7),
+OBUDGET_QTY NUMERIC(15, 2),
+OBUDGET_AMT NUMERIC(15, 2),
+OACTUAL_QTY NUMERIC(15, 2),
+OACTUAL_AMT NUMERIC(15, 2),
+OSTD_QTY NUMERIC(15, 2),
+OSTD_AMT NUMERIC(15, 2))
+AS 
+          
+begin
+  For select job_no,
+         section_no,
+         cost_cat,
+         sjc.budget_qty,
+         sjc.budget_amt,
+         sjc.actual_qty,
+         sjc.actual_amt,
+         sjc.std_qty, 
+         sjc.std_amount
+        from  Sub_Job_Cost sjc, Sub_Job sj
+        where sjc. Job_No = :iJob_No
+/*          and sjc.Job_No = sj.Job_No
+          and sjc.Line_No = sj.Line_No
+        group by Job_No, Section_No, Cost_Cat */
+        order by Section_No, Cost_Cat
+        into :oJob_No,
+             :oSection_No,
+             :oCost_Cat,
+             :oBudget_Qty,
+             :oBudget_Amt,
+             :oActual_Qty,
+             :oActual_Amt,
+             :oStd_Qty,
+             :oStd_Amt
+    do
+      suspend;
+end
+ ^
+SET TERM ; ^
+COMMIT WORK ;
+SET AUTODDL ON;
+SET TERM ^ ;
+
+/* Triggers only will work for SQL triggers */
+CREATE TRIGGER JOB_DELETE FOR JOB                             
+ACTIVE BEFORE DELETE POSITION 0 
+AS
+BEGIN
+  DELETE FROM SUB_JOB
+    WHERE JOB_NO = OLD.JOB_NO;
+END
+ ^
+CREATE TRIGGER SUB_JOB_DELETE FOR SUB_JOB                         
+ACTIVE BEFORE DELETE POSITION 0 
+AS
+BEGIN
+  DELETE FROM SUB_JOB_COST
+    WHERE JOB_NO = OLD.JOB_NO
+      AND LINE_NO = OLD.LINE_NO;
+END
+ ^
+CREATE TRIGGER CATEGORY_UPDATE FOR CATEGORY                        
+ACTIVE BEFORE UPDATE POSITION 0 
+AS
+BEGIN
+  if (new.CATEGORY <> old.CATEGORY) then
+    UPDATE SUB_JOB
+      SET SUB_JOB_CAT = new.CATEGORY
+      where SUB_JOB_CAT = old.CATEGORY;
+END
+ ^
+CREATE TRIGGER SUB_JOB_INSERT FOR SUB_JOB                         
+ACTIVE BEFORE INSERT POSITION 0 
+AS
+BEGIN
+  new.CREATED_BY = USER;
+END
+ ^
+COMMIT WORK ^
+SET TERM ; ^
+
+/* Grant permissions for this database */
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON CATEGORY TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JOB TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON SUB_JOB TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON SUB_JOB_COST TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE COST_IMPORT TO JORDAN;
+GRANT EXECUTE ON PROCEDURE COST_IMPORT TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_COST_CAT_AMT TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_COST_CAT_QTY TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_JOB_COST TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE QS_IMPORT TO JORDAN;
+GRANT EXECUTE ON PROCEDURE QS_IMPORT TO PUBLIC;
+

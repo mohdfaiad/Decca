@@ -1,0 +1,201 @@
+/* Extract Database deccant:d:\gdb\ctdata\ctdata.gdb */
+CREATE DATABASE "deccant:d:\gdb\ctdata\ctdata.gdb" PAGE_SIZE 2048 
+;
+
+
+/* Table: CATEGORY, Owner: SYSDBA */
+CREATE TABLE CATEGORY (CATEGORY CHAR(4) NOT NULL,
+        DESCRIPTION VARCHAR(30) CHARACTER SET BIG_5,
+PRIMARY KEY (CATEGORY));
+
+/* Table: JOB, Owner: SYSDBA */
+CREATE TABLE JOB (JOB_NO CHAR(7) NOT NULL,
+        DESCRIPTION VARCHAR(30) CHARACTER SET BIG_5,
+        QUOT_NO CHAR(7),
+        KEYWORD VARCHAR(20),
+PRIMARY KEY (JOB_NO));
+
+/* Table: SUB_JOB, Owner: SYSDBA */
+CREATE TABLE SUB_JOB (JOB_NO CHAR(7) NOT NULL,
+        LINE_NO INTEGER NOT NULL,
+        QTY NUMERIC(9, 3) DEFAULT 0
+,
+        JLENGTH NUMERIC(9, 3) DEFAULT 0
+,
+        JWIDTH NUMERIC(9, 3) DEFAULT 0
+,
+        JHEIGHT NUMERIC(9, 3) DEFAULT 0
+,
+        LAST_UPD_DATE DATE,
+        STATUS CHAR(1) DEFAULT "W"
+,
+        AUTHORIED_BY VARCHAR(10),
+        COMMENT BLOB SUB_TYPE 0 SEGMENT SIZE 80,
+        SUB_JOB_CAT CHAR(4),
+        PHOTO BLOB SUB_TYPE 0 SEGMENT SIZE 80,
+        DESCRIPTION VARCHAR(60) CHARACTER SET BIG_5,
+        SUB_JOB_NO VARCHAR(30),
+        QUOT_LINE_NO VARCHAR(60),
+        UNIT CHAR(5) CHARACTER SET BIG_5,
+PRIMARY KEY (JOB_NO, LINE_NO));
+
+/* Table: SUB_JOB_COST, Owner: SYSDBA */
+CREATE TABLE SUB_JOB_COST (JOB_NO CHAR(7) NOT NULL,
+        LINE_NO INTEGER NOT NULL,
+        COST_CAT CHAR(7) NOT NULL,
+        BUDGET_QTY NUMERIC(9, 3) DEFAULT 0
+,
+        BUDGET_AMT NUMERIC(9, 2) DEFAULT 0
+,
+        ACTUAL_QTY NUMERIC(9, 3) DEFAULT 0
+,
+        ACTUAL_AMT NUMERIC(9, 2) DEFAULT 0
+,
+        STD_QTY NUMERIC(9, 3) DEFAULT 0
+,
+        STD_AMOUNT NUMERIC(9, 2) DEFAULT 0
+,
+        SECTION_NO CHAR(1) DEFAULT "0"
+,
+        QUOT_ITEM_NO CHAR(7),
+        QTY_UNIT CHAR(10) CHARACTER SET BIG_5,
+        DESCRIPTION CHAR(15) CHARACTER SET BIG_5,
+        CATEGORY CHAR(7),
+PRIMARY KEY (JOB_NO, LINE_NO, COST_CAT));
+
+
+COMMIT WORK;
+SET AUTODDL OFF;
+SET TERM ^ ;
+
+/* Stored procedures */
+CREATE PROCEDURE QS_IMPORT AS BEGIN EXIT; END ^
+CREATE PROCEDURE COST_IMPORT AS BEGIN EXIT; END ^
+
+ALTER PROCEDURE QS_IMPORT (JOBNO CHAR(7),
+STARTLINENO INTEGER,
+ENDLINENO INTEGER)
+AS 
+     
+begin
+
+   update sub_job_cost
+   set budget_qty = 0,
+       budget_amt = 0
+   where
+     (Job_No = :JobNo) and
+     (Line_No >= :StartLineNo) and
+     (Line_No <= :EndLineNo) and 
+     (line_no in 
+       (select line_no from sub_job 
+          where (Job_No = :JobNo) and 
+                (Status <> 'C') and
+                (Line_No >= :StartLineNo) and
+                (Line_No <= :EndLineNo) 
+        )
+      );
+
+   delete from sub_job_cost
+     where (Actual_Qty = 0)
+       and (Actual_Amt = 0)
+       and (Std_Qty = 0)
+       and (Std_Amount = 0)
+       and (Job_No = :JobNo)
+       and (Line_No >= :StartLineNo)
+       and (Line_No <= :EndLineNo) 
+       and (line_no in 
+             (select line_no from sub_job 
+                 where (Job_No = :JobNo) and
+                       (Status <> 'C') and
+                       (Line_No >= :StartLineNo) and
+                       (Line_No <= :EndLineNo) 
+              )
+            );
+end
+ ^
+
+ALTER PROCEDURE COST_IMPORT (JOBNO CHAR(7),
+STARTLINENO INTEGER,
+ENDLINENO INTEGER)
+AS 
+          
+begin
+   update sub_job_cost
+     set actual_qty = 0,
+         actual_amt = 0
+     where Job_No = :JobNo
+       and Line_No >= :STARTLineNo
+       and Line_No <= :EndLineNo
+       and (line_no in 
+             (select line_no from sub_job 
+               where (Job_No = :JobNo) and 
+                     (Status <> 'C') and
+                     (Line_No >= :StartLineNo) and
+                     (Line_No <= :EndLineNo)  
+              )
+            );
+
+   delete from sub_job_cost
+     where Budget_Qty = 0
+       and Budget_Amt = 0
+       and Std_Qty = 0
+       and Std_Amount = 0
+       and Job_No = :JobNo
+       and Line_No >= :StartLineNo
+       and Line_No <= :EndLineNo
+       and (line_no in 
+            (select line_no from sub_job 
+              where (Job_No = :JobNo) and 
+                    (Status <> 'C') and
+                    (Line_No >= :StartLineNo) and
+                    (Line_No <= :EndLineNo) 
+             )
+            );
+end
+ ^
+SET TERM ; ^
+COMMIT WORK ;
+SET AUTODDL ON;
+SET TERM ^ ;
+
+/* Triggers only will work for SQL triggers */
+CREATE TRIGGER JOB_DELETE FOR JOB                             
+ACTIVE BEFORE DELETE POSITION 0 
+AS
+BEGIN
+  DELETE FROM SUB_JOB
+    WHERE JOB_NO = OLD.JOB_NO;
+END
+ ^
+CREATE TRIGGER SUB_JOB_DELETE FOR SUB_JOB                         
+ACTIVE BEFORE DELETE POSITION 0 
+AS
+BEGIN
+  DELETE FROM SUB_JOB_COST
+    WHERE JOB_NO = OLD.JOB_NO
+      AND LINE_NO = OLD.LINE_NO;
+END
+ ^
+CREATE TRIGGER CATEGORY_UPDATE FOR CATEGORY                        
+ACTIVE BEFORE UPDATE POSITION 0 
+AS
+BEGIN
+  if (new.CATEGORY <> old.CATEGORY) then
+    UPDATE SUB_JOB
+      SET SUB_JOB_CAT = new.CATEGORY
+      where SUB_JOB_CAT = old.CATEGORY;
+END
+ ^
+COMMIT WORK ^
+SET TERM ; ^
+
+/* Grant permissions for this database */
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON CATEGORY TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JOB TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON SUB_JOB TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON SUB_JOB_COST TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE COST_IMPORT TO JORDAN;
+GRANT EXECUTE ON PROCEDURE COST_IMPORT TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE QS_IMPORT TO JORDAN;
+GRANT EXECUTE ON PROCEDURE QS_IMPORT TO PUBLIC;
+

@@ -1,0 +1,284 @@
+CREATE PROCEDURE GET_PRODUCTION_STATUS (
+  IDATE DATE,
+  IJOB_COST_CAT_1 CHAR(3) character set big5,
+  IJOB_COST_CAT_2 CHAR(3) character set big5,
+  IJOB_COST_CAT_3 CHAR(3) character set big5,
+  IJOB_COST_CAT_4 CHAR(3) character set big5
+) RETURNS (
+  OJOB_NO_1 CHAR(4) character set big5,
+  OJOB_NO_2 CHAR(1) character set big5,
+  OJOB_DESC CHAR(30) character set big5,
+  OFWO_NO CHAR(2) character set big5,
+  OFWO_DESC CHAR(30) character set big5,
+  OFWO_QTY NUMERIC(15, 2),
+  OORDER_DATE DATE,
+  OORDERED_BY CHAR(4) character set big5,
+  OFINISH_DATE DATE,
+  OCOMPLETION_DATE DATE,
+  ORECEIVE_DATE_1 DATE,
+  OSUBPRODUCTION_START_DATE_1 DATE,
+  OLAST_DATE_1 DATE,
+  oPRODUCTION_STATUS_1  char(1) character set big5,
+  ORECEIVE_DATE_2 DATE,
+  OSUBPRODUCTION_START_DATE_2 DATE,
+  OLAST_DATE_2 DATE,
+  oPRODUCTION_STATUS_2  char(1) character set big5,
+  ORECEIVE_DATE_3 DATE,
+  OSUBPRODUCTION_START_DATE_3 DATE,
+  OLAST_DATE_3 DATE,
+  oPRODUCTION_STATUS_3  char(1) character set big5,
+  ORECEIVE_DATE_4 DATE,
+  OSUBPRODUCTION_START_DATE_4 DATE,
+  OLAST_DATE_4 DATE,
+  oPRODUCTION_STATUS_4  char(1) character set big5
+) AS                 
+declare variable wFinishDate2 date;
+declare variable wFinishDate3 date;
+declare variable wFinishDate4 date;
+begin
+  for
+    select
+       distinct job_no_1, job_no_2, Fwo_no 
+    from 
+       fwo_production
+    where ((job_cost_cat = :iJob_cost_cat_1) or
+           (job_cost_cat = :iJob_cost_cat_2) or
+           (job_cost_cat = :iJob_cost_cat_3) or
+           (job_cost_cat = :iJob_cost_cat_4)) and
+           ((FINISH_DATE = :iDate) or (FINISH_DATE is null))
+    into :ojob_no_1, :ojob_no_2, :oFwo_no
+  do
+    begin
+      select description
+      from job_file
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 
+      into :ojob_desc;
+
+      select description,
+             fwo_qty,
+             order_date,ordered_by,
+             completion_date
+      from job_fwo
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no 
+      into :ofwo_desc,
+           :ofwo_qty,
+           :oorder_date,
+           :oordered_by,
+           :ocompletion_date;
+      
+      select 
+        RECEIVE_DATE,
+        SUBPRODUCTION_START_DATE,
+        finish_date,
+        PRODUCTION_STATUS
+      from
+        fwo_production
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_1 
+      into :oreceive_date_1 , :osubproduction_start_date_1,
+           :ofinish_date,:oPRODUCTION_STATUS_1;
+
+      select 
+        LAST_DATE
+      from
+        fwo_cost_caT
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_1 
+      into :olast_date_1; 
+
+      select 
+        RECEIVE_DATE,
+        SUBPRODUCTION_START_DATE,
+        finish_date,
+        PRODUCTION_STATUS
+      from
+        fwo_production
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_2 
+      into :oreceive_date_2 , :osubproduction_start_date_2,
+           :wfinishdate2 ,:oPRODUCTION_STATUS_2;
+
+      select 
+        LAST_DATE
+      from
+        fwo_cost_caT
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_2 
+      into :olast_date_2; 
+
+      select 
+        RECEIVE_DATE,
+        SUBPRODUCTION_START_DATE,
+        finish_date,
+        PRODUCTION_STATUS
+      from
+        fwo_production
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_3 
+      into :oreceive_date_3 , :osubproduction_start_date_3,
+           :wfinishdate3,oPRODUCTION_STATUS_3;
+
+      select 
+        LAST_DATE
+      from
+        fwo_cost_caT
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_3 
+      into :olast_date_3; 
+  
+      select 
+        RECEIVE_DATE,
+        SUBPRODUCTION_START_DATE,
+        finish_date,
+        PRODUCTION_STATUS
+      from
+        fwo_production
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_4 
+      into :oreceive_date_4 , :osubproduction_start_date_4, 
+           :wfinishdate4,oPRODUCTION_STATUS_4;
+
+      select 
+        LAST_DATE
+      from
+        fwo_cost_caT
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_4 
+      into :olast_date_4;         
+
+      if (ofinish_date is null) then
+        ofinish_date = wfinishdate2;
+
+      if (ofinish_date is null) then
+        ofinish_date = wfinishdate3;  
+
+      if (ofinish_date is null) then
+        ofinish_date = wfinishdate4;
+      suspend;
+    end
+end
+/////////////;
+CREATE PROCEDURE GET_DAILY_Receive (
+  IJOB_COST_CAT_1 CHAR(3) character set big5,
+  IJOB_COST_CAT_2 CHAR(3) character set big5,
+  IJOB_COST_CAT_3 CHAR(3) character set big5,
+  IJOB_COST_CAT_4 CHAR(3) character set big5,
+  IFINISH_DATE DATE
+) RETURNS (
+  OJOB_NO_1 CHAR(4) character set big5,
+  OJOB_NO_2 CHAR(1) character set big5,
+  OJOB_DESC CHAR(30) character set big5,
+  OFWO_NO CHAR(4) character set big5,
+  OFWO_DESC CHAR(30) character set big5,
+  OFWO_QTY NUMERIC(15, 2),
+  OORDER_DATE DATE,
+  OORDERED_BY CHAR(4) character set big5,
+  OCOMPLETION_DATE DATE,
+  OLAST_DATE DATE,
+  OFINISH_DATE DATE,
+  OSUBPRODUCTION_START_DATE DATE,
+  ORECEIVE_DATE_1 DATE,
+  ORECEIVE_DATE_2 DATE,
+  ORECEIVE_DATE_3 DATE,
+  ORECEIVE_DATE_4 DATE
+) AS                   
+begin
+  for
+    select
+       distinct job_no_1, job_no_2, Fwo_no
+    from 
+       fwo_production
+    where ((job_cost_cat = :iJob_cost_cat_1) or
+           (job_cost_cat = :iJob_cost_cat_2) or
+           (job_cost_cat = :iJob_cost_cat_3) or
+           (job_cost_cat = :iJob_cost_cat_4)) and
+           (RECEIVE_DATE = :ifinish_date) 
+    into :ojob_no_1, :ojob_no_2, :oFwo_no
+    do
+      begin
+
+        select description
+        from  Job_File job
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 =:ojob_no_2))        
+        into :ojob_desc;
+
+        select description,
+                 fwo_qty,
+                 order_date,
+                 ordered_by,
+                 completion_date
+        from  Job_Fwo 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 =:ojob_no_2))        
+          and (fwo_no = :ofwo_no)
+        into :ofwo_desc,
+             :ofwo_qty,             
+             :oorder_date,
+             :oordered_by,
+             :ocompletion_date;
+
+        select receive_date
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_1)
+        into :oreceive_date_1;
+
+        select receive_date 
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_2)
+        into :oreceive_date_2;
+
+        select receive_date 
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_3)
+        into :oreceive_date_3;
+
+        select receive_date 
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_4)
+        into :oreceive_date_4;
+
+        suspend;
+      end
+end

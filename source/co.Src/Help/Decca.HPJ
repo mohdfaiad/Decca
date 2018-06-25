@@ -1,0 +1,21 @@
+; This file is maintained by WHD. Do not modify this file directly.
+;
+; This help project was created with Windows Help Designer V 2.1.6.2
+; *** UNREGISTERED ***
+; Windows Help Designer is copyright (C) 1996, 1997, by Nick Ameladiotis
+; Visit http://www.devgr.com for more informations
+;
+[OPTIONS]
+REPORT=Yes
+ERRORLOG=I:\co.Src\Help\Decca.LOG
+
+[WINDOWS]
+main="", , 0,(255,255,225),(192,192,192),0  ; 
+
+[FILES]
+Decca.RTF
+
+[MAP]
+Topic1=0x1
+Topic2=0x2
+Topic3=0x3

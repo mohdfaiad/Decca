@@ -1,0 +1,3249 @@
+/* Extract Database \\dgnt02\d:\gdb\jcdata\jcdata.gdb */
+CREATE DATABASE "\\software\d:\deccadb\jcdata.gdb" 
+   USER 'SYSDBA' PASSWORD 'm0ster' PAGE_SIZE 1024 
+;
+/* Table: ADJUST_JOB_DETAIL, Owner: SYSDBA */
+CREATE TABLE ADJUST_JOB_DETAIL (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        FWO_NO CHAR(2) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        SUB_JOB_NO CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        HIST_DATE DATE NOT NULL,
+        SITE_NO INTEGER DEFAULT 0
+ NOT NULL,
+        HIST_SEQ DATE NOT NULL,
+        DOC_NO CHAR(5) CHARACTER SET BIG_5 NOT NULL,
+        DETAIL_TYPE CHAR(1) CHARACTER SET BIG_5,
+        DETAIL_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        RETAIN_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        DETAIL_QTY NUMERIC(15, 4) DEFAULT 0
+,
+        ITEM_NO CHAR(16),
+        WHS_CODE CHAR(4),
+        ITEM_UNIT_COST NUMERIC(15, 4) DEFAULT 0
+,
+        ITEM_UNIT CHAR(2) CHARACTER SET BIG_5,
+        INVC_NO CHAR(5) CHARACTER SET BIG_5,
+        INVC_DATE DATE,
+        CHQ_NO CHAR(5) CHARACTER SET BIG_5,
+        CHQ_DATE DATE,
+        USER_ID CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        ACCT_NO CHAR(4) CHARACTER SET BIG_5,
+        PFT_CTR_1 CHAR(2) CHARACTER SET BIG_5,
+        PFT_CTR_2 CHAR(2) CHARACTER SET BIG_5,
+        COMMENT BLOB SUB_TYPE TEXT SEGMENT SIZE 80 CHARACTER SET BIG_5,
+        QTY_TYPE CHAR(1) DEFAULT "R"
+ NOT NULL,
+        POST_FLAG CHAR(1),
+PRIMARY KEY (DOC_NO, JOB_NO_1, JOB_NO_2, FWO_NO, JOB_COST_CAT, HIST_DATE, SITE_NO, QTY_TYPE, HIST_SEQ));
+/* Table: FWO_CAT, Owner: SYSDBA */
+CREATE TABLE FWO_CAT (FWO_CAT CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        DESCRIPTION VARCHAR(30) CHARACTER SET BIG_5,
+PRIMARY KEY (FWO_CAT));
+/* Table: FWO_COST_ANALYSIS, Owner: SYSDBA */
+CREATE TABLE FWO_COST_ANALYSIS (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        FWO_NO CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        QUOT_ITEM_NO CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        DESCRIPTION CHAR(15) CHARACTER SET BIG_5,
+        QUOT_ITEM_UNIT CHAR(2) CHARACTER SET BIG_5,
+        SECTION_NO CHAR(1) DEFAULT " "
+,
+        BUDGET_AMT NUMERIC(15, 2) default 0
+,
+        ACTUAL_AMT NUMERIC(15, 2) default 0
+,
+        STD_AMT NUMERIC(15, 2) default 0
+,
+        BUDGET_QTY NUMERIC(15, 2),
+        STD_QTY NUMERIC(15, 2),
+        ACTUAL_QTY NUMERIC(15, 4),
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, FWO_NO, QUOT_ITEM_NO));
+/* Table: FWO_COST_CAT, Owner: SYSDBA */
+CREATE TABLE FWO_COST_CAT (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        FWO_NO CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5 NOT NULL,
+        JOB_COST_CAT_UNIT CHAR(2) CHARACTER SET BIG_5,
+        REG_RATE NUMERIC(15, 2) DEFAULT 0.0
+,
+        PREM_RATE NUMERIC(15, 2) DEFAULT 0.0
+,
+        BUDGET_AMT NUMERIC(15, 2) DEFAULT 0.0
+,
+        BUDGET_QTY NUMERIC(15, 2) DEFAULT 0.0
+,
+        JOB_REG_AMT NUMERIC(15, 2) default 0.0
+,
+        JOB_PREM_AMT NUMERIC(15, 2) default 0.0
+,
+        FIRST_DATE DATE,
+        COMPLETE_PERCENT NUMERIC(9, 2),
+        COMPLETE_DATE DATE,
+        SUB_JOB_NO CHAR(2) CHARACTER SET BIG_5,
+        JOB_REG_QTY NUMERIC(15, 4) default 0
+,
+        JOB_PREM_QTY NUMERIC(15, 4) default 0
+,
+        LAST_DATE DATE,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, FWO_NO, JOB_COST_CAT));
+/* Table: FWO_COST_CAT_PERCENT, Owner: SYSDBA */
+CREATE TABLE FWO_COST_CAT_PERCENT (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        FWO_NO CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5 NOT NULL,
+        COMPLETE_DATE DATE NOT NULL,
+        COMPLETE_PERCENT NUMERIC(9, 2),
+        BUDGET_QTY NUMERIC(15, 2) default 0
+,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, FWO_NO, JOB_COST_CAT, COMPLETE_DATE));
+/* Table: FWO_PRODUCTION, Owner: SYSDBA */
+CREATE TABLE FWO_PRODUCTION (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        FWO_NO CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5 NOT NULL,
+        RECEIVE_DATE DATE,
+        FINISH_DATE DATE,
+        ORDER_CREATED_BY CHAR(4) CHARACTER SET BIG_5,
+        SUBPRODUCTION_START_DATE DATE,
+        SUBPRODUCTION_END_DATE DATE,
+        PRODUCTION_STATUS CHAR(1) CHARACTER SET BIG_5,
+        PRODUCTION_ID INTEGER NOT NULL,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, FWO_NO, JOB_COST_CAT, PRODUCTION_ID));
+/* Table: FWO_PRODUCTION_SEQ, Owner: SYSDBA */
+CREATE TABLE FWO_PRODUCTION_SEQ (PRODUCTION_ID INTEGER NOT NULL,
+        PRODUCTION_DATE DATE,
+        JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        FWO_NO CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        PRODUCTION_CAT CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+PRIMARY KEY (PRODUCTION_ID));
+/* Table: FWO_SUBPRODUCTION, Owner: SYSDBA */
+CREATE TABLE FWO_SUBPRODUCTION (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        FWO_NO CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5 NOT NULL,
+        LINE_NO INTEGER NOT NULL,
+        START_DATE DATE,
+        WORK_GROUP CHAR(2) CHARACTER SET BIG_5,
+        END_DATE DATE,
+        PRODUCTION_STATUS CHAR(1) CHARACTER SET BIG_5,
+        PRODUCTION_ID INTEGER NOT NULL,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, FWO_NO, JOB_COST_CAT, PRODUCTION_ID, LINE_NO));
+/* Table: JCCONTROL, Owner: SYSDBA */
+CREATE TABLE JCCONTROL (CONTROL_KEY INTEGER NOT NULL,
+        CURR_PERIOD DATE NOT NULL,
+        USE_JOB_NO_2 CHAR(1) DEFAULT "N"
+ NOT NULL,
+        JOB_NO_1_LEN INTEGER NOT NULL,
+        JOB_NO_2_LEN INTEGER DEFAULT 0
+,
+        SUB_JOB_NO_LEN INTEGER NOT NULL,
+        FWO_NO_LEN INTEGER NOT NULL,
+        LST_PERIOD DATE,
+        USE_RETAIN_AP CHAR(1) DEFAULT "N"
+ NOT NULL,
+        USE_RETAIN_AR CHAR(1) DEFAULT "N"
+ NOT NULL,
+        USER_DEF_TITLE01 CHAR(10) CHARACTER SET BIG_5,
+        USER_DEF_TITLE02 CHAR(10) CHARACTER SET BIG_5,
+        USER_DEF_TITLE03 CHAR(10) CHARACTER SET BIG_5,
+        USER_DEF_TITLE04 CHAR(10) CHARACTER SET BIG_5,
+        USER_DEF_TITLE05 CHAR(10) CHARACTER SET BIG_5,
+        USER_DEF_TITLE06 CHAR(10) CHARACTER SET BIG_5,
+        USER_DEF_TITLE07 CHAR(10) CHARACTER SET BIG_5,
+        USER_DEF_TITLE08 CHAR(10) CHARACTER SET BIG_5,
+        USER_DEF_TITLE09 CHAR(10) CHARACTER SET BIG_5,
+        USER_DEF_TITLE10 CHAR(10) CHARACTER SET BIG_5,
+        USE_BILL_AC_BY_JOB CHAR(1) DEFAULT "N"
+,
+        BILL_AC CHAR(4) CHARACTER SET BIG_5,
+        BILL_PROFIT_CTR_1 CHAR(2) CHARACTER SET BIG_5,
+        BILL_PROFIT_CTR_2 CHAR(2) CHARACTER SET BIG_5,
+        USE_FIELDS INTEGER default 0
+,
+        SITE_ID CHAR(1),
+        MS_USER CHAR(4) CHARACTER SET BIG_5,
+        MS_SITE_ID CHAR(1),
+        SETUP_MODE CHAR(1),
+        LAST_TC_DATE DATE,
+PRIMARY KEY (CONTROL_KEY));
+/* Table: JC_MLTS_DTL, Owner: SYSDBA */
+CREATE TABLE JC_MLTS_DTL (SEQ_NO INTEGER NOT NULL,
+        FIELD_NAME VARCHAR(15) CHARACTER SET BIG_5 NOT NULL,
+        STR_FLD VARCHAR(800) CHARACTER SET BIG_5,
+        BLOB_FLD BLOB SUB_TYPE 0 SEGMENT SIZE 80,
+        DATE_FLD DATE);
+/* Table: JC_MLTS_KEY, Owner: SYSDBA */
+CREATE TABLE JC_MLTS_KEY (SEQ_NO INTEGER NOT NULL,
+        TABLE_NAME VARCHAR(15) CHARACTER SET BIG_5 NOT NULL,
+        OLD_TABLE_KEY VARCHAR(40) CHARACTER SET BIG_5,
+        COMMAND CHAR(1),
+        SITE_ID CHAR(1));
+/* Table: JOB_CLAIM, Owner: SYSDBA */
+CREATE TABLE JOB_CLAIM (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 NOT NULL,
+        LINE_NO INTEGER default 0
+ NOT NULL,
+        SUB_JOB_NO CHAR(2) CHARACTER SET BIG_5,
+        APPLY_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        APPLY_DOC_NO CHAR(10),
+        APPLY_DATE DATE,
+        CERT_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        CERT_NO CHAR(10),
+        CERT_DATE DATE,
+        RECV_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        RECV_DOC_NO CHAR(10),
+        RECV_DATE DATE,
+        CLAIM_STATUS CHAR(1) DEFAULT 'I'
+,
+        COMMENT BLOB SUB_TYPE TEXT SEGMENT SIZE 80 CHARACTER SET BIG_5,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, LINE_NO));
+/* Table: JOB_COST_CAT, Owner: SYSDBA */
+CREATE TABLE JOB_COST_CAT (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        SUB_JOB_NO CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        JOB_COST_CAT_UNIT CHAR(2) CHARACTER SET BIG_5,
+        REG_RATE NUMERIC(15, 2) DEFAULT 0
+,
+        PREM_RATE NUMERIC(15, 2) DEFAULT 0
+,
+        BUDGET_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        DRAFT_BUDGET_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        DRAFT_BUDGET_QTY NUMERIC(15, 2) DEFAULT 0
+,
+        JOB_PREM_AMT NUMERIC(15, 2) DEFAULT 0.0
+,
+        JOB_REG_AMT NUMERIC(15, 2) DEFAULT 0.0
+,
+        JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5 NOT NULL,
+        JOB_REG_QTY NUMERIC(15, 4) DEFAULT 0
+,
+        JOB_PREM_QTY NUMERIC(15, 4) DEFAULT 0
+,
+        BUDGET_QTY NUMERIC(15, 2) DEFAULT 0
+,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, SUB_JOB_NO, JOB_COST_CAT));
+/* Table: JOB_COST_FILE, Owner: SYSDBA */
+CREATE TABLE JOB_COST_FILE (JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5 NOT NULL,
+        DESCRIPTION VARCHAR(10) CHARACTER SET BIG_5 NOT NULL,
+        JOB_COST_TYPE CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        JOB_COST_CAT_UNIT CHAR(2) CHARACTER SET BIG_5,
+        REG_RATE NUMERIC(9, 2) DEFAULT 0
+,
+        PREM_RATE NUMERIC(9, 2) DEFAULT 0
+,
+        PRODUCTION_CAT CHAR(2) CHARACTER SET BIG_5,
+PRIMARY KEY (JOB_COST_CAT));
+/* Table: JOB_COST_TYPE, Owner: SYSDBA */
+CREATE TABLE JOB_COST_TYPE (JOB_COST_CAT_TYPE CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        DESCRIPTION VARCHAR(10) CHARACTER SET BIG_5 NOT NULL,
+        COST_CAT_SYSTEM CHAR(1) CHARACTER SET BIG_5 NOT NULL,
+PRIMARY KEY (JOB_COST_CAT_TYPE));
+/* Table: JOB_DETAIL, Owner: SYSDBA */
+CREATE TABLE JOB_DETAIL (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        FWO_NO CHAR(2) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        SUB_JOB_NO CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        HIST_DATE DATE NOT NULL,
+        SITE_NO INTEGER DEFAULT 0
+ NOT NULL,
+        HIST_SEQ DATE NOT NULL,
+        DOC_NO CHAR(5) CHARACTER SET BIG_5,
+        DETAIL_TYPE CHAR(1) CHARACTER SET BIG_5,
+        DETAIL_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        RETAIN_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        DETAIL_QTY NUMERIC(15, 4) DEFAULT 0
+,
+        ITEM_NO CHAR(8) CHARACTER SET BIG_5,
+        WHS_CODE CHAR(2) CHARACTER SET BIG_5,
+        ITEM_UNIT_COST NUMERIC(15, 4) DEFAULT 0
+,
+        ITEM_UNIT CHAR(2) CHARACTER SET BIG_5,
+        INVC_NO CHAR(5) CHARACTER SET BIG_5,
+        INVC_DATE DATE,
+        CHQ_NO CHAR(5) CHARACTER SET BIG_5,
+        CHQ_DATE DATE,
+        USER_ID CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        ACCT_NO CHAR(4) CHARACTER SET BIG_5,
+        PFT_CTR_1 CHAR(2) CHARACTER SET BIG_5,
+        PFT_CTR_2 CHAR(2) CHARACTER SET BIG_5,
+        COMMENT BLOB SUB_TYPE TEXT SEGMENT SIZE 80 CHARACTER SET BIG_5,
+        QTY_TYPE CHAR(1) DEFAULT "R"
+ NOT NULL,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, FWO_NO, JOB_COST_CAT, HIST_DATE, SITE_NO, QTY_TYPE, HIST_SEQ));
+/* Table: JOB_FILE, Owner: SYSDBA */
+CREATE TABLE JOB_FILE (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 default " "
+ NOT NULL,
+        DESCRIPTION VARCHAR(30) CHARACTER SET BIG_5 NOT NULL,
+        JOB_STATUS CHAR(1) NOT NULL,
+        JOB_TYPE CHAR(1) NOT NULL,
+        BILL_CURRENCY CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        COST_CURRENCY CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        LST_EST_DATE DATE,
+        JOB_END_DATE DATE,
+        TERRITORY CHAR(2) CHARACTER SET BIG_5,
+        INCHARGE_PERSON CHAR(4) CHARACTER SET BIG_5,
+        CREATE_DATE DATE NOT NULL,
+        CREATED_BY CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        CUSTOMER_NO CHAR(3) CHARACTER SET BIG_5,
+        BILL_AC CHAR(4) CHARACTER SET BIG_5,
+        BILL_PROFIT_CTR_1 CHAR(2) CHARACTER SET BIG_5,
+        BILL_PROFIT_CTR_2 CHAR(2) CHARACTER SET BIG_5,
+        COMMENT BLOB SUB_TYPE TEXT SEGMENT SIZE 80 CHARACTER SET BIG_5,
+        OLD_JOB_NO CHAR(2) CHARACTER SET BIG_5,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2));
+/* Table: JOB_FWO, Owner: SYSDBA */
+CREATE TABLE JOB_FWO (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        FWO_NO CHAR(2) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        STATUS CHAR(1) DEFAULT "A"
+ NOT NULL,
+        SUB_JOB_NO CHAR(2) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        DESCRIPTION VARCHAR(30) CHARACTER SET BIG_5 NOT NULL,
+        CREATED_BY CHAR(4) CHARACTER SET BIG_5,
+        CREATE_DATE DATE,
+        FWO_LENGTH NUMERIC(15, 3) DEFAULT 0
+,
+        FWO_WIDTH NUMERIC(15, 3) DEFAULT 0
+,
+        FWO_HEIGHT NUMERIC(15, 3) DEFAULT 0
+,
+        COMMENT BLOB SUB_TYPE TEXT SEGMENT SIZE 80,
+        FWO_CAT CHAR(2) CHARACTER SET BIG_5,
+        CHECKED_BY CHAR(4) CHARACTER SET BIG_5,
+        CHECK_DATE DATE,
+        QUOT_NO CHAR(4) CHARACTER SET BIG_5,
+        UPDATE_SJ_BUDGET CHAR(1) DEFAULT "N"
+,
+        PRODUCT_CODE CHAR(8) CHARACTER SET BIG_5,
+        PHOTO BLOB SUB_TYPE 0 SEGMENT SIZE 80,
+        FWO_QTY NUMERIC(15, 2) default 1
+,
+        ORDER_DATE DATE,
+        ORDERED_BY CHAR(4) CHARACTER SET BIG_5,
+        COMPLETION_DATE DATE,
+        FWO_UNIT CHAR(2) CHARACTER SET BIG_5,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, FWO_NO));
+/* Table: JOB_FWO_DETAIL, Owner: SYSDBA */
+CREATE TABLE JOB_FWO_DETAIL (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 default " "
+ NOT NULL,
+        FWO_NO CHAR(2) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        LINE_NO INTEGER default 1
+ NOT NULL,
+        FWO_LENGTH NUMERIC(15, 3) DEFAULT 0
+,
+        FWO_WIDTH NUMERIC(15, 3) DEFAULT 0
+,
+        FWO_HEIGHT NUMERIC(15, 3) DEFAULT 0
+,
+        FWO_UNIT CHAR(2) CHARACTER SET BIG_5,
+        FWO_QTY NUMERIC(15, 2) DEFAULT 1
+,
+        QUOT_LINE_NO CHAR(10) CHARACTER SET BIG_5,
+        PRODUCT_CODE CHAR(8) CHARACTER SET BIG_5,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, FWO_NO, LINE_NO));
+/* Table: LIBRARY_ITEM, Owner: SYSDBA */
+CREATE TABLE LIBRARY_ITEM (QUOT_ITEM_NO CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5 NOT NULL,
+        LIBRARY_SECT CHAR(1) default '1'
+ NOT NULL,
+        DESCRIPTION CHAR(15) CHARACTER SET BIG_5,
+        LIBRARY_UNIT CHAR(2) CHARACTER SET BIG_5,
+        LIBRARY_FACTOR NUMERIC(9, 4) DEFAULT 1
+,
+        REFERENCE_RATE NUMERIC(9, 2) DEFAULT 0
+,
+        ITEM_SUMRY_CAT CHAR(4) CHARACTER SET BIG_5,
+PRIMARY KEY (QUOT_ITEM_NO));
+/* Table: PRODUCTION_CAT_FILE, Owner: SYSDBA */
+CREATE TABLE PRODUCTION_CAT_FILE (PRODUCTION_CAT CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        DESCRIPTION CHAR(15) CHARACTER SET BIG_5,
+PRIMARY KEY (PRODUCTION_CAT));
+/* Table: PRODUCTION_STATUS, Owner: SYSDBA */
+CREATE TABLE PRODUCTION_STATUS (PRODUCTION_STATUS CHAR(1) CHARACTER SET BIG_5 NOT NULL,
+        DESCRIPTION CHAR(10) CHARACTER SET BIG_5,
+PRIMARY KEY (PRODUCTION_STATUS));
+/* Table: SUBCONTRACT, Owner: SYSDBA */
+CREATE TABLE SUBCONTRACT (SUBCONTRACT_NO CHAR(5) CHARACTER SET BIG_5 NOT NULL,
+        CONTRACT_TITLE VARCHAR(30) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_1 CHAR(4) CHARACTER SET BIG_5,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5,
+        SUB_JOB_NO CHAR(2) CHARACTER SET BIG_5,
+        VENDOR_NO CHAR(3) CHARACTER SET BIG_5,
+        CONTRACT_SUM NUMERIC(15, 2) default 0
+,
+        CONTRACT_DATE DATE,
+        WORK_START_DATE DATE,
+        WORK_END_DATE DATE,
+        RETENTION_AMT NUMERIC(15, 2) default 0
+,
+        RETENTION_LIMIT NUMERIC(15, 2) default 0
+,
+        EST_VO_AMT NUMERIC(15, 2) default 0
+,
+        DEPOSIT_AMT NUMERIC(15, 2) default 0
+,
+        STATUS CHAR(1) default "N"
+,
+        CREATED_BY CHAR(4) CHARACTER SET BIG_5,
+        CREATE_DATE DATE,
+        COMMENT BLOB SUB_TYPE TEXT SEGMENT SIZE 80 CHARACTER SET BIG_5,
+        JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5,
+        TRADE CHAR(2) CHARACTER SET BIG_5,
+        CURRENCY CHAR(2) CHARACTER SET BIG_5,
+PRIMARY KEY (SUBCONTRACT_NO));
+/* Table: SUBCONTRACT_DETAIL, Owner: SYSDBA */
+CREATE TABLE SUBCONTRACT_DETAIL (SUBCONTRACT_NO CHAR(5) CHARACTER SET BIG_5 NOT NULL,
+        LINE_NO INTEGER DEFAULT 0
+ NOT NULL,
+        CERT_NO CHAR(5) CHARACTER SET BIG_5,
+        CERT_DATE DATE,
+        INVC_NO CHAR(8) CHARACTER SET BIG_5,
+        APPLY_DATE DATE,
+        APPLY_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        DAYWORKS NUMERIC(15, 2) DEFAULT 0
+,
+        APPLY_VO_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        CERT_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        COMMENT BLOB SUB_TYPE TEXT SEGMENT SIZE 80 CHARACTER SET BIG_5,
+        DEDUCT_DEPOSIT NUMERIC(15, 2) DEFAULT 0
+,
+        RETENTION_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        DEPOSIT_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        PREPAYMENT NUMERIC(15, 2) DEFAULT 0
+,
+PRIMARY KEY (SUBCONTRACT_NO, LINE_NO));
+/* Table: SUBCONTRACT_PAYMENT, Owner: SYSDBA */
+CREATE TABLE SUBCONTRACT_PAYMENT (SUBCONTRACT_NO CHAR(5) CHARACTER SET BIG_5 NOT NULL,
+        LINE_NO INTEGER DEFAULT 0
+ NOT NULL,
+        VOUCHER_NO CHAR(5) CHARACTER SET BIG_5 NOT NULL,
+        PAID_DATE DATE,
+        PAID_AMT NUMERIC(15, 2),
+PRIMARY KEY (SUBCONTRACT_NO, LINE_NO));
+/* Table: SUB_JOB_FILE, Owner: SYSDBA */
+CREATE TABLE SUB_JOB_FILE (JOB_NO_1 CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        JOB_NO_2 CHAR(1) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        SUB_JOB_NO CHAR(2) CHARACTER SET BIG_5 DEFAULT " "
+ NOT NULL,
+        DESCRIPTION VARCHAR(30) CHARACTER SET BIG_5 NOT NULL,
+        SUB_JOB_STATUS CHAR(1) NOT NULL,
+        CONTRACT_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        COMPLETED_PCT NUMERIC(4, 2) DEFAULT 0
+,
+        SUB_JOB_END_DATE DATE,
+        CREATE_DATE DATE,
+        CREATED_BY CHAR(4) CHARACTER SET BIG_5,
+        JOB_RETAIN_AP NUMERIC(15, 2) DEFAULT 0
+,
+        JOB_RETAIN_AR NUMERIC(15, 2) DEFAULT 0
+,
+        JOB_BILL_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        JOB_AMT_PAID NUMERIC(15, 2) DEFAULT 0
+,
+        LST_BILL_DATE DATE,
+        LST_PMT_DATE DATE,
+        USER_DEF_FLD01 VARCHAR(15) CHARACTER SET BIG_5,
+        USER_DEF_FLD02 VARCHAR(15) CHARACTER SET BIG_5,
+        USER_DEF_FLD03 VARCHAR(15) CHARACTER SET BIG_5,
+        USER_DEF_FLD04 VARCHAR(15) CHARACTER SET BIG_5,
+        USER_DEF_FLD05 VARCHAR(15) CHARACTER SET BIG_5,
+        USER_DEF_FLD06 VARCHAR(15) CHARACTER SET BIG_5,
+        USER_DEF_FLD07 VARCHAR(15) CHARACTER SET BIG_5,
+        USER_DEF_FLD08 VARCHAR(15) CHARACTER SET BIG_5,
+        USER_DEF_FLD09 VARCHAR(15) CHARACTER SET BIG_5,
+        USER_DEF_FLD10 VARCHAR(15) CHARACTER SET BIG_5,
+        QUOT_NO CHAR(4) CHARACTER SET BIG_5,
+        SITE_LOCATION VARCHAR(30) CHARACTER SET BIG_5,
+        SUB_JOB_TYPE CHAR(1) DEFAULT "S"
+,
+        FINAL_CONT_AMT NUMERIC(15, 2),
+        REQ_BUDGET CHAR(1) DEFAULT "Y"
+,
+        VO_TO_SUB_JOB_NO CHAR(4),
+        JOB_REG_AMT NUMERIC(15, 2) DEFAULT 0
+,
+        JOB_PREM_AMT NUMERIC(15, 2) default 0
+,
+        COMMENT BLOB SUB_TYPE TEXT SEGMENT SIZE 80 CHARACTER SET BIG_5,
+PRIMARY KEY (JOB_NO_1, JOB_NO_2, SUB_JOB_NO));
+/* Table: TMP_JOB_DTL, Owner: SYSDBA */
+CREATE TABLE TMP_JOB_DTL (JOB_NO_1 CHAR(7) NOT NULL,
+        FWO_NO CHAR(3) NOT NULL,
+        HIST_DATE DATE NOT NULL,
+        AMOUNT NUMERIC(15, 2),
+        QTY_1 NUMERIC(15, 3),
+        QTY_TYPE CHAR(1),
+        JOB_COST_CAT CHAR(6),
+        SUB_JOB_NO CHAR(4));
+/* Table: TMP_JOB_FWO, Owner: SYSDBA */
+CREATE TABLE TMP_JOB_FWO (JOB_NO_1 CHAR(8) NOT NULL,
+        JOB_NO_2 CHAR(2) DEFAULT " "
+ NOT NULL,
+        FWO_NO CHAR(4) DEFAULT " "
+ NOT NULL,
+        STATUS CHAR(1) DEFAULT "A"
+ NOT NULL,
+        SUB_JOB_NO CHAR(4) DEFAULT " "
+ NOT NULL,
+        DESCRIPTION VARCHAR(60) NOT NULL,
+        CREATED_BY CHAR(8),
+        CREATE_DATE DATE,
+        FWO_LENGTH NUMERIC(15, 3) DEFAULT 0
+,
+        FWO_WIDTH NUMERIC(15, 3) DEFAULT 0
+,
+        FWO_HEIGHT NUMERIC(15, 3) DEFAULT 0
+,
+        FWO_UNIT CHAR(4),
+        COMMENT BLOB SUB_TYPE TEXT SEGMENT SIZE 80,
+        FWO_CAT CHAR(4),
+        CHECKED_BY CHAR(8),
+        CHECK_DATE DATE,
+        QUOT_NO CHAR(8),
+        UPDATE_SJ_BUDGET CHAR(1) DEFAULT "N"
+,
+        PRODUCT_CODE CHAR(16),
+        PHOTO BLOB SUB_TYPE 0 SEGMENT SIZE 80,
+        FWO_QTY NUMERIC(15, 2) DEFAULT 1
+,
+        ORDER_DATE DATE,
+        ORDERED_BY CHAR(8),
+        COMPLETION_DATE DATE);
+/* Table: TRADE, Owner: SYSDBA */
+CREATE TABLE TRADE (TRADE CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        DESCRIPTION CHAR(20) CHARACTER SET BIG_5,
+PRIMARY KEY (TRADE));
+/* Table: USER_PRODUCTION, Owner: SYSDBA */
+CREATE TABLE USER_PRODUCTION (USER_ID CHAR(4) CHARACTER SET BIG_5 NOT NULL,
+        PRODUCTION_CAT CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        FUNCTION_FLAG CHAR(1) NOT NULL,
+CONSTRAINT USER_PRODUCTIONPRIMARYKEY1 PRIMARY KEY (USER_ID, PRODUCTION_CAT));
+/* Table: VENDOR, Owner: SYSDBA */
+CREATE TABLE VENDOR (VENDOR_NO CHAR(3) CHARACTER SET BIG_5 NOT NULL,
+        NAME CHAR(30) CHARACTER SET BIG_5,
+        ADDRESS BLOB SUB_TYPE TEXT SEGMENT SIZE 80 CHARACTER SET BIG_5,
+PRIMARY KEY (VENDOR_NO));
+/* Table: WORK_GROUP, Owner: SYSDBA */
+CREATE TABLE WORK_GROUP (WORK_GROUP CHAR(2) CHARACTER SET BIG_5 NOT NULL,
+        DESCRIPTION VARCHAR(10) CHARACTER SET BIG_5,
+        REG_RATE NUMERIC(9, 2) DEFAULT 0
+,
+        PREM_RATE NUMERIC(9, 2) DEFAULT 0
+,
+        JOB_COST_CAT CHAR(3) CHARACTER SET BIG_5,
+PRIMARY KEY (WORK_GROUP));
+/*  Index definitions for all user tables */
+CREATE UNIQUE INDEX FWO_COST_CAT_IDX2 ON FWO_COST_CAT(JOB_NO_1, JOB_NO_2, JOB_COST_CAT, FWO_NO);
+CREATE UNIQUE INDEX FWO_COST_CAT_IDX3 ON FWO_COST_CAT(JOB_COST_CAT, JOB_NO_1, JOB_NO_2, FWO_NO);
+CREATE INDEX JOB_DETAIL_IDX2 ON JOB_DETAIL(HIST_DATE, JOB_NO_1, JOB_NO_2, FWO_NO, JOB_COST_CAT);
+CREATE INDEX JOB_DETAIL_IDX3 ON JOB_DETAIL(JOB_NO_1, JOB_NO_2, JOB_COST_CAT, HIST_DATE);
+CREATE INDEX JOB_FILEINDEX_CUSTOMER_NO ON JOB_FILE(CUSTOMER_NO, JOB_NO_1, JOB_NO_2);
+CREATE INDEX JOB_FILEINDEX_TERRITORY ON JOB_FILE(TERRITORY, JOB_NO_1, JOB_NO_2);
+CREATE UNIQUE INDEX JOB_FWO_IDX2 ON JOB_FWO(JOB_NO_1, JOB_NO_2, SUB_JOB_NO, FWO_NO);
+CREATE INDEX SUBCONTRACTINDEX_JOB ON SUBCONTRACT(JOB_NO_1, JOB_NO_2, SUB_JOB_NO, SUBCONTRACT_NO);
+CREATE INDEX TMP_JOB_DTLINDEX1 ON TMP_JOB_DTL(HIST_DATE, JOB_NO_1, FWO_NO, JOB_COST_CAT, QTY_TYPE);
+CREATE GENERATOR JC_MULTISITE_SEQ;
+CREATE GENERATOR PRODUCTION_COUNT;
+/* View: VFWO_PRODUCTION_FINISH, Owner: SYSDBA */
+CREATE VIEW VFWO_PRODUCTION_FINISH (JOB_NO_1, JOB_NO_2, FWO_NO, PRODUCTION_CAT, FINISH_DATE) AS
+
+  select distinct
+           fp.Job_no_1,
+           fp.Job_No_2,
+           fp.FWO_No,
+           jcf.Production_Cat,
+           fp.Finish_Date
+    from FWO_Production fp,
+         Job_Cost_File jcf
+    where fp.Finish_Date is not null
+      and fp.Job_Cost_Cat = jcf.Job_Cost_Cat
+
+;
+/* View: VIEW_JOB_COST_CAT_BY_JOB, Owner: SYSDBA */
+CREATE VIEW VIEW_JOB_COST_CAT_BY_JOB (JOB_NO_1, JOB_NO_2, JOB_COST_CAT, JOB_COST_CAT_UNIT, REG_RATE, PREM_RATE, BUDGET_AMT, BUDGET_QTY, JOB_REG_QTY, JOB_REG_AMT, JOB_PREM_QTY, JOB_PREM_AMT) AS
+
+   SELECT JOB_NO_1,
+          JOB_NO_2,
+          JOB_COST_CAT,
+          JOB_COST_CAT_UNIT ,
+          SUM(REG_RATE) ,
+          SUM(PREM_RATE) ,
+          SUM(BUDGET_AMT),
+          SUM(BUDGET_QTY),
+          SUM(JOB_REG_QTY) ,
+          SUM(JOB_REG_AMT),
+          SUM(JOB_PREM_QTY) ,
+          SUM(JOB_PREM_AMT)
+     FROM JOB_COST_CAT 
+     GROUP BY JOB_NO_1,
+              JOB_NO_2,
+              JOB_COST_CAT,
+              JOB_COST_CAT_UNIT
+
+;
+COMMIT WORK;
+SET AUTODDL OFF;
+SET TERM ^ ;
+/* Stored procedures */
+CREATE PROCEDURE GET_SUB_FWO AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_JOBNO AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_JOB_NO AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_SUB_JOB_TOT_BY_JOB AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_JOB_COST_CAT_TOT_BY_JOB AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_JOB_COST_CAT_TOT_BY_CAT AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_JOB_COST_CAT_BY_JOB AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_FWO_COST_CAT_TOT_BY_FWO AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_COST_CAT_VIEW_BY_JOB AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_COST_CAT_TOT_BY_SUB_JOB AS BEGIN EXIT; END ^
+CREATE PROCEDURE SET_FWO_COST_CAT_LAST_DATE AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_PROJECT_ITEM AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_JOB_PROGRESS AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_DAILY_PRODUCTION AS BEGIN EXIT; END ^
+CREATE PROCEDURE SET_JOB_PROGRESS AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_DAILY_RECEIVE AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_LAST_SUBPRODUCTION AS BEGIN EXIT; END ^
+CREATE PROCEDURE GET_PRODUCTION_STATUS AS BEGIN EXIT; END ^
+ALTER PROCEDURE GET_SUB_FWO (IJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+IJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+IFWO_NO CHAR(4) CHARACTER SET BIG_5)
+RETURNS (OJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+OJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+OSUB_NO CHAR(4) CHARACTER SET BIG_5,
+OFWO_NO CHAR(4) CHARACTER SET BIG_5,
+OSTATUS CHAR(1),
+ODESCRIPTION VARCHAR(60) CHARACTER SET BIG_5,
+OQUOT_NO CHAR(8) CHARACTER SET BIG_5)
+AS 
+ 
+                                             
+begin
+  if (:iFWO_NO = '') then
+  begin
+    for select distinct Job_No_1,
+          Job_No_2,
+          sub_job_no,
+          fwo_no,
+          description ,
+          status,
+          quot_no               
+        from Job_fwo
+        where job_no_1 = :iJOB_NO_1
+            and job_no_2 = :iJOB_NO_2
+        order by Job_No_1, Job_No_2
+        into :OJOB_NO_1 ,
+             :OJOB_NO_2 ,
+             :OSUB_NO,
+             :OFWO_NO ,
+             :ODESCRIPTION,
+             :OSTATUS,
+             :OQUOT_NO
+      do
+        suspend;
+  end
+  if (:iFWO_NO <> '') then
+  begin
+    for select distinct Job_No_1,
+          Job_No_2,
+          sub_job_no,
+          fwo_no,
+          description ,
+          status,
+          quot_no               
+        from Job_fwo
+        where job_no_1 = :iJOB_NO_1
+            and job_no_2 = :iJOB_NO_2
+            and FWO_NO like :iFWO_NO
+        order by Job_No_1, Job_No_2
+        into :OJOB_NO_1 ,
+             :OJOB_NO_2 ,
+             :OSUB_NO,
+             :OFWO_NO ,
+             :ODESCRIPTION,
+             :OSTATUS,
+             :OQUOT_NO
+      do
+        suspend;
+  end
+end
+ ^
+ALTER PROCEDURE GET_JOBNO RETURNS (OJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+OJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+ODESCRIPTION VARCHAR(60) CHARACTER SET BIG_5)
+AS 
+ 
+                                              
+begin
+  for select Job_No_1,
+             Job_No_2,
+             description 
+        from Job_File
+        order by Job_No_1, Job_No_2
+        into :oJob_No_1,
+             :oJob_No_2,
+             :oDescription
+    do
+      suspend;
+end
+ ^
+ALTER PROCEDURE GET_JOB_NO (IJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+IJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+ISUB_JOB_NO CHAR(4) CHARACTER SET BIG_5,
+IFWO_NO CHAR(4) CHARACTER SET BIG_5)
+RETURNS (OJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+OJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+ODESCRIPTION VARCHAR(60) CHARACTER SET BIG_5,
+OINCHARGE_PERSON CHAR(8) CHARACTER SET BIG_5,
+OJOB_STATUS CHAR(1))
+AS 
+  
+                                            
+begin
+  if ((:iSUB_JOB_NO = '') and (:iFWO_NO = '')) then
+  begin
+    if ((:iJOB_NO_1 = '') and (:iJOB_NO_2 = '')) then
+    begin
+      for select Job_No_1,
+                 Job_No_2,
+                 description ,
+                 job_status,
+                 incharge_person
+            from Job_File
+            order by Job_No_1, Job_No_2
+            into :oJob_No_1,
+                 :oJob_No_2,
+                 :oDescription,
+                 :ojob_Status,
+                 :oincharge_person
+      do
+        suspend;
+    end
+    if ((:iJOB_NO_1 <> '') and (:iJOB_NO_2 = '')) then
+    begin
+      for select Job_No_1,
+                 Job_No_2,
+                 description ,
+                 job_status,
+                 incharge_person
+            from Job_File
+            where Job_No_1 like :iJob_No_1
+            order by Job_No_1, Job_No_2
+            into :oJob_No_1,
+                 :oJob_No_2,
+                 :oDescription,
+                 :ojob_Status,
+                 :oincharge_person
+      do
+        suspend;
+    end
+    if ((:iJOB_NO_1 = '') and (:iJOB_NO_2 <> '')) then
+    begin
+      for select Job_No_1,
+                 Job_No_2,
+                 description ,
+                 job_status,
+                 incharge_person
+            from Job_File
+            where Job_No_2 like :iJob_No_2
+            order by Job_No_1, Job_No_2
+            into :oJob_No_1,
+                 :oJob_No_2,
+                 :oDescription,
+                 :ojob_Status,
+                 :oincharge_person
+      do
+        suspend;
+    end
+    if ((:iJOB_NO_1 <> '') and (:iJOB_NO_2 <> '')) then
+    begin
+      for select Job_No_1,
+                 Job_No_2,
+                 description ,
+                 job_status,
+                 incharge_person
+            from Job_File
+            where Job_No_1 like :iJob_No_1
+              and Job_No_2 like :iJob_No_2
+            order by Job_No_1, Job_No_2
+            into :oJob_No_1,
+                 :oJob_No_2,
+                 :oDescription,
+                 :ojob_Status,
+                 :oincharge_person
+      do
+        suspend;
+    end
+  end
+  
+  if ((:iSUB_JOB_NO <> '') and (:iFWO_NO = '')) then
+  begin
+    if ((:iJOB_NO_1 = '') and (:iJOB_NO_2 = '')) then
+    begin
+      for select distinct JOB.Job_No_1,
+            JOB.Job_No_2,
+            JOB.description ,
+            JOB.job_status,
+            JOB.incharge_person
+          from SUB_JOB_FILE SUB,job_file JOB
+          where SUB.SUB_JOB_NO like :iSUB_JOB_NO
+            and SUB.job_no_1=JOB.job_no_1
+            and SUB.job_no_2=JOB.job_no_2
+          order by JOB.Job_No_1, JOB.Job_No_2
+          into :oJob_No_1,
+               :oJob_No_2,
+               :oDescription,
+               :ojob_Status,
+               :oincharge_person
+      do
+        suspend;
+    end
+    if ((:iJOB_NO_1 <> '') and (:iJOB_NO_2 = '')) then
+    begin
+      for select distinct SUB.Job_No_1,
+            SUB.Job_No_2,
+            SUB.description ,
+            SUB.sub_job_status,
+            JOB.incharge_person
+          from SUB_JOB_FILE SUB,job_file JOB
+          where SUB.SUB_JOB_NO like :iSUB_JOB_NO
+            and SUB.SUB_JOB_NO like :iJOB_NO_1
+            and SUB.job_no_1=JOB.job_no_1
+            and SUB.job_no_2=JOB.job_no_2
+          order by Job_No_1, Job_No_2
+          into :oJob_No_1,
+               :oJob_No_2,
+               :oDescription,
+               :ojob_Status,
+               :oincharge_person
+      do
+        suspend;
+    end
+    if ((:iJOB_NO_1 = '') and (:iJOB_NO_2 <> '')) then
+    begin
+      for select distinct SUB.Job_No_1,
+            SUB.Job_No_2,
+            SUB.description ,
+            SUB.sub_job_status,
+            JOB.incharge_person
+          from SUB_JOB_FILE SUB,job_file JOB
+          where SUB.SUB_JOB_NO like :iSUB_JOB_NO
+            and SUB.JOB_NO_2 like :iJOB_NO_2
+            and SUB.job_no_1=JOB.job_no_1
+            and SUB.job_no_2=JOB.job_no_2
+          order by Job_No_1, Job_No_2
+          into :oJob_No_1,
+               :oJob_No_2,
+               :oDescription,
+               :ojob_Status,
+               :oincharge_person
+      do
+        suspend;
+    end
+    if ((:iJOB_NO_1 <> '') and (:iJOB_NO_2 <> '')) then
+    begin
+      for select distinct JOB.Job_No_1,
+          JOB.Job_No_2,
+          JOB.description ,
+          JOB.job_status,
+          JOB.incharge_person
+        from Job_File JOB,sub_job_file SUB
+        where Job_No_1 like :iJob_No_1
+            and Job_No_2 like :iJob_No_2
+            and SUB.sub_job_no like :iSUB_JOB_no
+            and JOB.job_no_1 = SUB.job_no_1
+            and JOB.job_no_2 = SUB.job_no_2
+        order by JOB.Job_No_1, JOB.Job_No_2
+        into :oJob_No_1,
+             :oJob_No_2,
+             :oDescription,
+             :ojob_Status,
+             :oincharge_person
+      do
+        suspend;
+    end
+  end
+
+  if ((:iSUB_JOB_NO = '') and (:iFWO_NO <> '')) then
+  begin
+    if ((:iJOB_NO_1 = '') and (:iJOB_NO_2 = '')) then
+    begin
+      for  select distinct FWO.Job_No_1,
+             FWO.Job_No_2,
+             JOB.description ,
+             JOB.INCHARGE_PERSON,
+             FWO.status
+           from job_fwo FWO,job_file JOB
+           where FWO.fwo_no like :ifwo_no
+             and FWO.job_no_1=JOB.job_no_1
+             and FWO.job_no_2=JOB.job_no_2
+           order by Job_No_1, Job_No_2
+           into :oJob_No_1,
+                :oJob_No_2,
+                :Odescription, 
+                :oincharge_person,
+                :ojob_status
+      do
+        suspend;
+    end
+    if ((:iJOB_NO_1 <> '') and (:iJOB_NO_2 = '')) then
+    begin
+      for  select distinct FWO.Job_No_1,
+             FWO.Job_No_2,
+             JOB.description ,
+             JOB.INCHARGE_PERSON,
+             FWO.status
+           from job_fwo FWO,job_file JOB
+           where FWO.fwo_no like :ifwo_no
+             and FWO.job_no_1 like :iJOB_NO_1
+             and FWO.job_no_1=JOB.job_no_1
+             and FWO.job_no_2=JOB.job_no_2
+           order by Job_No_1, Job_No_2
+           into :oJob_No_1,
+                :oJob_No_2,
+                :Odescription, 
+                :oincharge_person,
+                :ojob_status
+      do
+        suspend;
+    end
+    if ((:iJOB_NO_1 = '') and (:iJOB_NO_2 <> '')) then
+    begin
+      for  select distinct FWO.Job_No_1,
+             FWO.Job_No_2,
+             JOB.description ,
+             JOB.INCHARGE_PERSON,
+             FWO.status
+           from job_fwo FWO,job_file JOB
+           where FWO.fwo_no like :ifwo_no
+             and FWO.job_no_2 like :iJOB_NO_2
+             and FWO.job_no_1=JOB.job_no_1
+             and FWO.job_no_2=JOB.job_no_2
+           order by Job_No_1, Job_No_2
+           into :oJob_No_1,
+                :oJob_No_2,
+                :Odescription, 
+                :oincharge_person,
+                :ojob_status
+      do
+        suspend;
+    end
+    if ((:iJOB_NO_1 <> '') and (:iJOB_NO_2 <> '')) then
+    begin
+      for select distinct JOB.Job_No_1,
+            JOB.Job_No_2,
+            JOB.description ,
+            JOB.job_status,
+            JOB.incharge_person
+          from Job_File JOB,JOB_FWO FWO
+          where JOB.Job_No_1 like :iJob_No_1
+            and JOB.Job_No_2 like :iJob_No_2
+            and FWO.fwo_no   like :ifwo_no
+            and JOB.job_no_1 = FWO.job_no_1
+            and JOB.job_no_2 = FWO.job_no_2
+          order by JOB.Job_No_1, JOB.Job_No_2
+          into :oJob_No_1,
+               :oJob_No_2,
+               :oDescription,
+               :ojob_Status,
+               :oincharge_person
+        do
+          suspend;
+    end
+  end  
+  
+  if ((:iSUB_JOB_NO <> '') and (:iFWO_NO <> '')) then
+  begin
+    if ((:iJOB_NO_1 = '') and (:iJOB_NO_2 = '')) then
+    begin
+      for select distinct JOB.Job_No_1,
+               JOB.Job_No_2,
+               JOB.description ,
+               JOB.job_status,
+               JOB.incharge_person
+            from Job_File JOB,SUB_JOB_FILE SUB,JOB_FWO FWO
+            where SUB.sub_job_no like :iSUB_JOB_NO
+              and FWO.fwo_no like :iFWO_NO
+              and JOB.job_no_1 = SUB.job_no_1
+              and JOB.job_no_2 = SUB.job_no_2
+              and JOB.job_no_1 = FWO.job_no_1
+              and JOB.job_no_2 = FWO.job_no_2
+              and SUB.job_no_1 = FWO.job_no_1
+              and SUB.job_no_2 = FWO.job_no_2
+            order by JOB.Job_No_1, JOB.Job_No_2
+            into :oJob_No_1,
+                 :oJob_No_2,
+                 :oDescription,
+                 :ojob_Status,
+                 :oincharge_person
+        do
+          suspend;
+
+    end
+    if ((:iJOB_NO_1 <> '') and (:iJOB_NO_2 = '')) then
+    begin
+      for select distinct JOB.Job_No_1,
+               JOB.Job_No_2,
+               JOB.description ,
+               JOB.job_status,
+               JOB.incharge_person
+            from Job_File JOB,SUB_JOB_FILE SUB,JOB_FWO FWO
+            where JOB.Job_No_1 like :iJob_No_1
+              and SUB.sub_job_no like :iSUB_JOB_NO
+              and FWO.fwo_no like :iFWO_NO
+              and JOB.job_no_1 = SUB.job_no_1
+              and JOB.job_no_2 = SUB.job_no_2
+              and JOB.job_no_1 = FWO.job_no_1
+              and JOB.job_no_2 = FWO.job_no_2
+              and SUB.job_no_1 = FWO.job_no_1
+              and SUB.job_no_2 = FWO.job_no_2
+            order by JOB.Job_No_1, JOB.Job_No_2
+            into :oJob_No_1,
+                 :oJob_No_2,
+                 :oDescription,
+                 :ojob_Status,
+                 :oincharge_person
+          do
+            suspend;
+    end
+    if ((:iJOB_NO_1 = '') and (:iJOB_NO_2 <> '')) then
+    begin
+      for select distinct JOB.Job_No_1,
+               JOB.Job_No_2,
+               JOB.description ,
+               JOB.job_status,
+               JOB.incharge_person
+            from Job_File JOB,SUB_JOB_FILE SUB,JOB_FWO FWO
+            where JOB.Job_No_2 like :iJob_No_2
+              and SUB.sub_job_no like :iSUB_JOB_NO
+              and FWO.fwo_no like :iFWO_NO
+              and JOB.job_no_1 = SUB.job_no_1
+              and JOB.job_no_2 = SUB.job_no_2
+              and JOB.job_no_1 = FWO.job_no_1
+              and JOB.job_no_2 = FWO.job_no_2
+              and SUB.job_no_1 = FWO.job_no_1
+              and SUB.job_no_2 = FWO.job_no_2
+            order by JOB.Job_No_1, JOB.Job_No_2
+            into :oJob_No_1,
+                 :oJob_No_2,
+                 :oDescription,
+                 :ojob_Status,
+                 :oincharge_person
+       do
+         suspend;
+    end
+    if ((:iJOB_NO_1 <> '') and (:iJOB_NO_2 <> '')) then
+    begin
+      for select distinct JOB.Job_No_1,
+               JOB.Job_No_2,
+               JOB.description ,
+               JOB.job_status,
+               JOB.incharge_person
+            from Job_File JOB,SUB_JOB_FILE SUB,JOB_FWO FWO
+            where JOB.Job_No_1 like :iJob_No_1
+              and JOB.Job_No_2 like :iJob_No_2
+              and SUB.sub_job_no like :iSUB_JOB_NO
+              and FWO.fwo_no like :iFWO_NO
+              and JOB.job_no_1 = SUB.job_no_1
+              and JOB.job_no_2 = SUB.job_no_2
+              and JOB.job_no_1 = FWO.job_no_1
+              and JOB.job_no_2 = FWO.job_no_2
+              and SUB.job_no_1 = FWO.job_no_1
+              and SUB.job_no_2 = FWO.job_no_2
+            order by JOB.Job_No_1, JOB.Job_No_2
+            into :oJob_No_1,
+                 :oJob_No_2,
+                 :oDescription,
+                 :ojob_Status,
+                 :oincharge_person
+          do
+            suspend;
+    end
+  end  
+end
+ ^
+ALTER PROCEDURE GET_SUB_JOB_TOT_BY_JOB (JOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+JOB_NO_2 CHAR(2) CHARACTER SET BIG_5)
+RETURNS (JOB_COUNT INTEGER,
+JOB_REG_AMT NUMERIC(15, 2),
+JOB_PREM_AMT NUMERIC(15, 2),
+JOB_BILL_AMT NUMERIC(15, 2),
+JOB_AMT_PAID DOUBLE PRECISION,
+JOB_RETAIN_AP DOUBLE PRECISION,
+JOB_RETAIN_AR DOUBLE PRECISION)
+AS 
+ 
+      
+begin
+  SELECT count(Job_No_1),
+         SUM(JOB_REG_AMT),
+         SUM(JOB_PREM_AMT),
+         SUM(JOB_BILL_AMT),
+         SUM(JOB_AMT_PAID),
+         SUM(JOB_RETAIN_AP),
+         SUM(JOB_RETAIN_AR)
+    FROM sub_job_file
+    where Job_No_1 = :Job_No_1
+      and Job_No_2 = :Job_No_2
+    into :Job_Count,:Job_Reg_Amt, :Job_Prem_Amt, 
+         :Job_Bill_Amt,:Job_Amt_Paid,
+         :Job_Retain_AP, :Job_Retain_AR;
+  suspend;
+end
+ ^
+ALTER PROCEDURE GET_JOB_COST_CAT_TOT_BY_JOB (JOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+JOB_NO_2 CHAR(2) CHARACTER SET BIG_5)
+RETURNS (JOB_COUNT INTEGER,
+BUDGET_AMT NUMERIC(15, 2),
+JOB_REG_AMT NUMERIC(15, 2),
+JOB_PREM_AMT NUMERIC(15, 2))
+AS 
+ 
+              
+begin
+  SELECT count(Job_No_1),        
+         sum(BUDGET_AMT),
+         sum(JOB_REG_AMT),
+         sum(JOB_PREM_AMT)
+    from JOB_COST_CAT
+    where (JOB_NO_1 = :JOB_NO_1)
+      and (JOB_NO_2 = :JOB_NO_2)
+     into :Job_Count,
+          :BUDGET_AMT,
+          :JOB_REG_AMT,
+          :JOB_PREM_AMT;
+  suspend;
+end
+ ^
+ALTER PROCEDURE GET_JOB_COST_CAT_TOT_BY_CAT (JOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+JOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+JOB_COST_CAT CHAR(6) CHARACTER SET BIG_5)
+RETURNS (JOB_COUNT INTEGER,
+REG_RATE NUMERIC(15, 2),
+PREM_RATE NUMERIC(15, 2),
+BUDGET_AMT NUMERIC(15, 2),
+BUDGET_QTY NUMERIC(15, 2),
+JOB_REG_QTY NUMERIC(15, 4),
+JOB_REG_AMT NUMERIC(15, 2),
+JOB_PREM_QTY NUMERIC(15, 4),
+JOB_PREM_AMT NUMERIC(15, 2))
+AS 
+    
+      
+begin
+  SELECT count(job_no_1),
+         SUM(REG_RATE) ,
+         SUM(PREM_RATE) ,
+         SUM(BUDGET_AMT),
+         SUM(BUDGET_QTY),
+         SUM(JOB_REG_QTY) ,
+         SUM(JOB_REG_AMT),
+         SUM(JOB_PREM_QTY) ,
+         SUM(JOB_PREM_AMT)
+  FROM JOB_COST_CAT
+  where job_no_1 = :job_no_1
+    and job_no_2 = :job_no_2
+    and Job_Cost_Cat = :Job_Cost_Cat
+  GROUP BY JOB_NO_1,
+           JOB_NO_2,
+           JOB_COST_CAT
+  into :job_count,
+       :REG_RATE ,
+       :PREM_RATE ,
+       :BUDGET_AMT,
+       :BUDGET_QTY,
+       :JOB_REG_QTY,
+       :JOB_REG_AMT,
+       :JOB_PREM_QTY,
+       :JOB_PREM_AMT;
+  suspend;
+end
+ ^
+ALTER PROCEDURE GET_JOB_COST_CAT_BY_JOB (JOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+JOB_NO_2 CHAR(2) CHARACTER SET BIG_5)
+RETURNS (JOB_COST_CAT CHAR(6) CHARACTER SET BIG_5,
+REG_RATE NUMERIC(15, 2),
+PREM_RATE NUMERIC(15, 2),
+BUDGET_AMT NUMERIC(15, 2),
+BUDGET_QTY NUMERIC(15, 2),
+JOB_REG_QTY NUMERIC(15, 4),
+JOB_REG_AMT NUMERIC(15, 2),
+JOB_PREM_QTY NUMERIC(15, 4),
+JOB_PREM_AMT NUMERIC(15, 2))
+AS 
+    
+                          
+begin
+  SELECT Job_Cost_Cat,
+         sum(REG_RATE),
+         sum(PREM_RATE),
+         sum(Budget_Amt),
+         sum(Budget_Qty),
+         sum(Job_Reg_Qty),
+         sum(Job_Reg_Amt),
+         sum(Job_Prem_Qty),
+         sum(Job_Prem_Amt)
+    from JOB_COST_CAT
+    where (JOB_NO_1 = :Job_No_1)
+      and (JOB_NO_2 = :Job_No_2)
+    group by Job_No_1, Job_No_2, Job_Cost_Cat
+     into :Job_Cost_Cat,
+          :REG_RATE,
+          :PREM_RATE,
+          :Budget_Amt,
+          :Budget_Qty,
+          :Job_Reg_Qty,
+          :Job_Reg_Amt,
+          :Job_Prem_Qty,
+          :Job_Prem_Amt; 
+  suspend;
+end
+ ^
+ALTER PROCEDURE GET_FWO_COST_CAT_TOT_BY_FWO (JOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+JOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+FWO_NO CHAR(4) CHARACTER SET BIG_5)
+RETURNS (JOB_COUNT INTEGER,
+BUDGET_AMT NUMERIC(15, 2),
+JOB_REG_AMT NUMERIC(15, 2),
+JOB_PREM_AMT NUMERIC(15, 2))
+AS 
+ 
+        
+begin
+  SELECT count(job_no_1),
+         SUM(BUDGET_AMT),
+         SUM(JOB_REG_AMT),
+         SUM(JOB_PREM_AMT)
+    FROM FWO_COST_CAT
+    where Job_No_1 = :Job_No_1
+      and Job_No_2 = :Job_No_2
+      and FWO_No = :FWO_No
+    into :job_count, 
+         :Budget_Amt, 
+         :Job_Reg_Amt, 
+         :Job_Prem_Amt;
+end
+ ^
+ALTER PROCEDURE GET_COST_CAT_VIEW_BY_JOB (OJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+OJOB_NO_2 CHAR(2) CHARACTER SET BIG_5)
+RETURNS (JOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+JOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+JOB_COST_CAT CHAR(6) CHARACTER SET BIG_5,
+JOB_COST_CAT_UNIT CHAR(4) CHARACTER SET BIG_5,
+REG_RATE NUMERIC(15, 2),
+PREM_RATE NUMERIC(15, 2),
+BUDGET_AMT NUMERIC(15, 2),
+BUDGET_QTY NUMERIC(15, 2),
+JOB_REG_QTY NUMERIC(15, 4),
+JOB_REG_AMT NUMERIC(15, 2),
+JOB_PREM_QTY NUMERIC(15, 4),
+JOB_PREM_AMT NUMERIC(15, 2))
+AS 
+    
+                    
+begin
+  SELECT JOB_NO_1,
+         JOB_NO_2,
+         JOB_COST_CAT,
+         JOB_COST_CAT_UNIT ,
+         SUM(REG_RATE) ,
+         SUM(PREM_RATE) ,
+         SUM(BUDGET_AMT),
+         SUM(BUDGET_QTY),
+         SUM(JOB_REG_QTY) ,
+         SUM(JOB_REG_AMT),
+         SUM(JOB_PREM_QTY) ,
+         SUM(JOB_PREM_AMT)
+    FROM JOB_COST_CAT
+   WHERE (JOB_NO_1 = :OJOB_NO_1)
+     and (JOB_NO_2 = :OJOB_NO_2)
+  GROUP BY JOB_NO_1,
+           JOB_NO_2,
+           JOB_COST_CAT,
+           JOB_COST_CAT_UNIT 
+    into :JOB_NO_1,
+         :JOB_NO_2,
+         :JOB_COST_CAT,
+         :JOB_COST_CAT_UNIT ,
+         :REG_RATE,
+         :PREM_RATE,
+         :BUDGET_AMT,
+         :BUDGET_QTY,
+         :JOB_REG_QTY,
+         :JOB_REG_AMT,
+         :JOB_PREM_QTY,
+         :JOB_PREM_AMT; 
+  suspend;
+end
+ ^
+ALTER PROCEDURE GET_COST_CAT_TOT_BY_SUB_JOB (JOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+JOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+SUB_JOB_NO CHAR(4) CHARACTER SET BIG_5)
+RETURNS (JOB_COUNT INTEGER,
+BUDGET_AMT NUMERIC(15, 2),
+JOB_REG_AMT NUMERIC(15, 2),
+JOB_PREM_AMT NUMERIC(15, 2))
+AS 
+ 
+                
+begin
+  SELECT count(Job_No_1),
+         sum(BUDGET_AMT),
+         sum(JOB_REG_AMT),
+         sum(JOB_PREM_AMT)
+    FROM JOB_COST_CAT
+   WHERE (JOB_NO_1 = :JOB_NO_1)
+     and (JOB_NO_2 = :JOB_NO_2)
+     and (SUB_JOB_NO =:SUB_JOB_NO)
+    into :Job_Count,
+         :BUDGET_AMT,
+         :JOB_REG_AMT,
+         :JOB_PREM_AMT;
+  suspend;
+end
+ ^
+ALTER PROCEDURE SET_FWO_COST_CAT_LAST_DATE AS 
+
+declare variable wJob_no_1 char(4) character set big5;
+declare variable wJob_no_2 char(1) character set big5;
+declare variable wfwo_no char(2) character set big5;
+declare variable wJob_Cost_Cat char(3) character set big5;
+declare variable wDate Date;
+begin
+  for select job_no_1, job_no_2, fwo_no, job_cost_cat
+        from fwo_cost_cat
+        into :wJob_No_1,
+             :wJob_No_2,
+             :wFwo_No,
+             :wJob_Cost_Cat
+  do 
+  begin
+    select max(hist_date)
+       from job_detail
+       where job_no_1 = :wJob_No_1
+         and job_No_2 = :wJob_No_2
+         and FWO_No = :wFWO_No
+         and Job_Cost_Cat = :wJob_Cost_Cat
+       into :wDate;
+    update fwo_Cost_cat
+      set last_Date = :wDate
+       where job_no_1 = :wJob_No_1
+         and job_No_2 = :wJob_No_2
+         and FWO_No = :wFWO_No
+         and Job_Cost_Cat = :wJob_Cost_Cat;
+  end
+end
+ ^
+ALTER PROCEDURE GET_PROJECT_ITEM (IJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+IJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+ISTART_DATE DATE,
+IEND_DATE DATE)
+RETURNS (OJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+OJOB_NO_2 CHAR(4) CHARACTER SET BIG_5,
+OJOB_DESCRIPTION VARCHAR(60) CHARACTER SET BIG_5,
+OJOB_COST_CAT CHAR(6) CHARACTER SET BIG_5,
+OJOB_COST_CAT_DESC VARCHAR(20) CHARACTER SET BIG_5,
+OJOB_COST_CAT_UNIT CHAR(4) CHARACTER SET BIG_5,
+R_DETAIL_AMT NUMERIC(15, 2),
+R_DETAIL_QTY NUMERIC(15, 2),
+P_DETAIL_AMT NUMERIC(15, 2),
+P_DETAIL_QTY NUMERIC(15, 2),
+AMT_TOT NUMERIC(15, 2),
+QTY_TOT NUMERIC(15, 2))
+AS 
+                                
+begin
+  FOR 
+    SELECT DISTINCT JD.JOB_NO_1,
+           JD.JOB_NO_2,
+           JD.JOB_COST_CAT,
+           JCF.JOB_COST_CAT_UNIT
+    FROM JOB_DETAIL jd, JOB_COST_FILE JCF
+    WHERE JD.JOB_NO_1 LIKE :IJOB_NO_1
+      AND JD.JOB_NO_2 LIKE :IJOB_NO_2
+      AND JD.HIST_DATE >= :ISTART_DATE
+      AND JD.HIST_DATE <= :IEND_DATE
+      and jd.job_cost_cat = jcf.job_cost_cat
+    ORDER BY jd.JOB_NO_1,
+           jd.JOB_NO_2,
+           jcf.job_cost_cat_unit,
+           jd.job_cost_cat
+    INTO  :OJOB_NO_1,
+          :OJOB_NO_2,
+          :OJOB_COST_CAT,
+          :OJOB_COST_CAT_UNIT
+  DO 
+    BEGIN
+      SELECT DESCRIPTION
+      FROM JOB_FILE
+      WHERE ((JOB_NO_1 =:OJOB_NO_1)
+        AND (JOB_NO_2 =:OJOB_NO_2))
+      INTO :OJOB_DESCRIPTION;
+      
+      SELECT DESCRIPTION
+      FROM JOB_COST_FILE
+      WHERE JOB_COST_CAT = :OJOB_COST_CAT
+      INTO :OJOB_COST_CAT_DESC;
+      
+      SELECT SUM(DETAIL_AMT),
+            SUM(DETAIL_QTY)
+      FROM JOB_DETAIL
+      WHERE ((JOB_NO_1 =:OJOB_NO_1)
+        AND (JOB_NO_2 =:OJOB_NO_2)
+        AND (HIST_DATE >= :ISTART_DATE
+        AND HIST_DATE <= :IEND_DATE)
+        AND (JOB_COST_CAT = :OJOB_COST_CAT)
+        AND (QTY_TYPE ='P'))
+      INTO :P_DETAIL_AMT,
+           :P_DETAIL_QTY;
+      
+      SELECT SUM(DETAIL_AMT),
+           SUM(DETAIL_QTY)
+      FROM JOB_DETAIL
+      WHERE ((JOB_NO_1 =:OJOB_NO_1)
+        AND (JOB_NO_2 =:OJOB_NO_2)
+        AND (HIST_DATE >= :ISTART_DATE
+        AND HIST_DATE <= :IEND_DATE)
+        AND (JOB_COST_CAT = :OJOB_COST_CAT)
+        AND (QTY_TYPE ='R'))
+      INTO :R_DETAIL_AMT,
+           :R_DETAIL_QTY;
+     
+      IF (R_DETAIL_AMT IS NULL) THEN
+         R_DETAIL_AMT = 0;
+      IF (R_DETAIL_QTY IS NULL) THEN
+         R_DETAIL_QTY = 0;
+      IF (P_DETAIL_AMT IS NULL) THEN
+         P_DETAIL_AMT = 0;
+      IF (P_DETAIL_QTY IS NULL) THEN
+         P_DETAIL_QTY = 0;
+
+      AMT_TOT = R_DETAIL_AMT + P_DETAIL_AMT;
+      QTY_TOT = R_DETAIL_QTY + P_DETAIL_QTY;
+     
+      SUSPEND;
+    END   
+end
+ ^
+ALTER PROCEDURE GET_JOB_PROGRESS (IJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+IJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+COST_CAT_1 CHAR(6) CHARACTER SET BIG_5,
+COST_CAT_2 CHAR(6) CHARACTER SET BIG_5,
+COST_CAT_3 CHAR(6) CHARACTER SET BIG_5,
+COST_CAT_4 CHAR(6) CHARACTER SET BIG_5)
+RETURNS (JOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+JOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+FWO_NO CHAR(4) CHARACTER SET BIG_5,
+JOB_COST_CAT_UNIT_1 CHAR(4) CHARACTER SET BIG_5,
+BUDGET_QTY_1 NUMERIC(15, 2),
+NOW_FWO_QTY_1 NUMERIC(15, 4),
+FIRST_DATE_1 DATE,
+COMPLETE_PERCENT_1 NUMERIC(9, 2),
+COMPLETE_DATE_1 DATE,
+FWO_QTY_1 NUMERIC(15, 4),
+JOB_COST_CAT_UNIT_2 CHAR(4) CHARACTER SET BIG_5,
+BUDGET_QTY_2 NUMERIC(15, 2),
+NOW_FWO_QTY_2 NUMERIC(15, 4),
+FIRST_DATE_2 DATE,
+COMPLETE_PERCENT_2 NUMERIC(9, 2),
+COMPLETE_DATE_2 DATE,
+FWO_QTY_2 NUMERIC(15, 4),
+JOB_COST_CAT_UNIT_3 CHAR(4) CHARACTER SET BIG_5,
+BUDGET_QTY_3 NUMERIC(15, 2),
+NOW_FWO_QTY_3 NUMERIC(15, 4),
+FIRST_DATE_3 DATE,
+COMPLETE_PERCENT_3 NUMERIC(9, 2),
+COMPLETE_DATE_3 DATE,
+FWO_QTY_3 NUMERIC(15, 4),
+JOB_COST_CAT_UNIT_4 CHAR(4) CHARACTER SET BIG_5,
+BUDGET_QTY_4 NUMERIC(15, 2),
+NOW_FWO_QTY_4 NUMERIC(15, 4),
+FIRST_DATE_4 DATE,
+COMPLETE_PERCENT_4 NUMERIC(9, 2),
+COMPLETE_DATE_4 DATE,
+FWO_QTY_4 NUMERIC(15, 4))
+AS 
+         
+                
+begin
+  for 
+    select job_no_1, job_no_2, Fwo_no 
+    from job_fwo
+    where job_no_1 = :ijob_no_1 and
+          job_no_2 = :ijob_no_2
+    into :job_no_1, :job_no_2, :Fwo_no
+  
+  do
+    begin
+      Job_Cost_Cat_Unit_1 = null;
+      Budget_Qty_1 = 0;
+      Now_FWO_Qty_1 = 0;
+      First_Date_1 = null;
+      Complete_Percent_1 = 0;
+      Complete_Date_1 = null;
+
+      Job_Cost_Cat_Unit_2 = null;
+      Budget_Qty_2 = 0;
+      Now_FWO_Qty_2 = 0;
+      First_Date_2 = null;
+      Complete_Percent_2 = 0;
+      Complete_Date_2 = null;
+
+      Job_Cost_Cat_Unit_3 = null;
+      Budget_Qty_3 = 0;
+      Now_FWO_Qty_3 = 0;
+      First_Date_3 = null;
+      Complete_Percent_3 = 0;
+      Complete_Date_3 = null;
+
+      Job_Cost_Cat_Unit_4 = null;
+      Budget_Qty_4 = 0;
+      Now_FWO_Qty_4 = 0;
+      First_Date_4 = null;
+      Complete_Percent_4 = 0;
+      Complete_Date_4 = null;
+
+      select Job_cost_cat_unit,
+             budget_qty,
+             (JOB_REG_QTY + JOB_PREM_QTY) now_Fwo_qty,   
+             FIRST_DATE,
+             COMPLETE_PERCENT,
+             COMPLETE_DATE
+      from fwo_cost_cat
+      where job_no_1 = :job_no_1 and
+            job_no_2 = :job_no_2 and
+            Job_cost_cat = :cost_cat_1 and
+            Fwo_no =:Fwo_no
+      into :Job_cost_cat_unit_1,
+           :budget_qty_1,
+           :now_Fwo_qty_1,   
+           :FIRST_DATE_1,
+           :COMPLETE_PERCENT_1 ,
+           :COMPLETE_DATE_1;
+
+      select 
+        sum(DETAIL_QTY) 
+      from
+        job_detail
+      where job_no_1 = :job_no_1 and
+            job_no_2 = :job_no_2 and
+            Job_cost_cat = :cost_cat_1 and
+            Fwo_no =:Fwo_no and
+            hist_date <= :COMPLETE_DATE_1
+      into :Fwo_qty_1;
+
+      select Job_cost_cat_unit,
+             budget_qty,
+             (JOB_REG_QTY + JOB_PREM_QTY) now_Fwo_qty,   
+             FIRST_DATE,
+             COMPLETE_PERCENT,
+             COMPLETE_DATE
+      from fwo_cost_cat
+      where job_no_1 = :job_no_1 and
+            job_no_2 = :job_no_2 and
+            Job_cost_cat = :cost_cat_2 and
+            Fwo_no =:Fwo_no
+      into :Job_cost_cat_unit_2,
+           :budget_qty_2,
+           :now_Fwo_qty_2,   
+           :FIRST_DATE_2,
+           :COMPLETE_PERCENT_2 ,
+           :COMPLETE_DATE_2;
+      select 
+        sum(DETAIL_QTY) 
+      from
+        job_detail
+      where job_no_1 = :job_no_1 and
+            job_no_2 = :job_no_2 and
+            Job_cost_cat = :cost_cat_2 and
+            Fwo_no =:Fwo_no and
+            hist_date <= :COMPLETE_DATE_2
+      into :Fwo_qty_2;
+
+      select Job_cost_cat_unit,
+             budget_qty,
+             (JOB_REG_QTY + JOB_PREM_QTY) now_Fwo_qty,   
+             FIRST_DATE,
+             COMPLETE_PERCENT,
+             COMPLETE_DATE
+      from fwo_cost_cat
+      where job_no_1 = :job_no_1 and
+            job_no_2 = :job_no_2 and
+            Job_cost_cat = :cost_cat_3 and
+            Fwo_no =:Fwo_no
+      into :Job_cost_cat_unit_3,
+           :budget_qty_3,
+           :now_Fwo_qty_3,   
+           :FIRST_DATE_3,
+           :COMPLETE_PERCENT_3 ,
+           :COMPLETE_DATE_3;
+      select 
+        sum(DETAIL_QTY) 
+      from
+        job_detail
+      where job_no_1 = :job_no_1 and
+            job_no_2 = :job_no_2 and
+            Job_cost_cat = :cost_cat_3 and
+            Fwo_no =:Fwo_no and
+            hist_date <= :COMPLETE_DATE_3
+      into :Fwo_qty_3;
+
+      select Job_cost_cat_unit,
+             budget_qty,
+             (JOB_REG_QTY + JOB_PREM_QTY) now_Fwo_qty,   
+             FIRST_DATE,
+             COMPLETE_PERCENT,
+             COMPLETE_DATE
+      from fwo_cost_cat
+      where job_no_1 = :job_no_1 and
+            job_no_2 = :job_no_2 and
+            Job_cost_cat = :cost_cat_4 and
+            Fwo_no =:Fwo_no
+      into :Job_cost_cat_unit_4,
+           :budget_qty_4,
+           :now_Fwo_qty_4,   
+           :FIRST_DATE_4,
+           :COMPLETE_PERCENT_4 ,
+           :COMPLETE_DATE_4;
+      select 
+        sum(DETAIL_QTY) 
+      from
+        job_detail
+      where job_no_1 = :job_no_1 and
+            job_no_2 = :job_no_2 and
+            Job_cost_cat = :cost_cat_4 and
+            Fwo_no =:Fwo_no and
+            hist_date <= :COMPLETE_DATE_4
+      into :Fwo_qty_4;
+     
+      suspend;
+    end     
+end
+ ^
+ALTER PROCEDURE GET_DAILY_PRODUCTION (IJOB_COST_CAT_1 CHAR(6) CHARACTER SET BIG_5,
+IJOB_COST_CAT_2 CHAR(6) CHARACTER SET BIG_5,
+IJOB_COST_CAT_3 CHAR(6) CHARACTER SET BIG_5,
+IJOB_COST_CAT_4 CHAR(6) CHARACTER SET BIG_5,
+IFINISH_DATE DATE)
+RETURNS (OJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+OJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+OJOB_DESC CHAR(60) CHARACTER SET BIG_5,
+OFWO_NO CHAR(8) CHARACTER SET BIG_5,
+OFWO_DESC CHAR(60) CHARACTER SET BIG_5,
+OFWO_QTY NUMERIC(15, 2),
+OORDER_DATE DATE,
+OORDERED_BY CHAR(8) CHARACTER SET BIG_5,
+OCOMPLETION_DATE DATE,
+OLAST_DATE DATE,
+OFINISH_DATE DATE,
+OSUBPRODUCTION_START_DATE DATE,
+ORECEIVE_DATE_1 DATE,
+ORECEIVE_DATE_2 DATE,
+ORECEIVE_DATE_3 DATE,
+ORECEIVE_DATE_4 DATE)
+AS 
+                   
+begin
+  for
+    select
+       distinct job_no_1, job_no_2, Fwo_no
+    from 
+       fwo_production
+    where ((job_cost_cat = :iJob_cost_cat_1) or
+           (job_cost_cat = :iJob_cost_cat_2) or
+           (job_cost_cat = :iJob_cost_cat_3) or
+           (job_cost_cat = :iJob_cost_cat_4)) and
+           ((finish_date = :ifinish_date) 
+             or (finish_date is null))
+    into :ojob_no_1, :ojob_no_2, :oFwo_no
+    do
+      begin
+
+        select description
+        from  Job_File job
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 =:ojob_no_2))        
+        into :ojob_desc;
+
+        select description,
+                 fwo_qty,
+                 order_date,
+                 ordered_by,
+                 completion_date
+        from  Job_Fwo 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 =:ojob_no_2))        
+          and (fwo_no = :ofwo_no)
+        into :ofwo_desc,
+             :ofwo_qty,             
+             :oorder_date,
+             :oordered_by,
+             :ocompletion_date;
+
+        select receive_date,finish_date 
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_1)
+        into :oreceive_date_1,
+             :ofinish_date;
+
+        select receive_date 
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_2)
+        into :oreceive_date_2;
+
+        select receive_date 
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_3)
+        into :oreceive_date_3;
+
+        select receive_date 
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_4)
+        into :oreceive_date_4;
+
+        suspend;
+      end
+end
+ ^
+ALTER PROCEDURE SET_JOB_PROGRESS (JOBCOSTCAT CHAR(6) CHARACTER SET BIG_5,
+COMPLETEDATE DATE,
+STARTDATE DATE,
+ENDDATE DATE)
+AS 
+   
+declare variable wJobNo1 char(4) character set big5;
+declare variable wJobNo2 char(1) character set big5;
+declare variable wFWONo char(2) character set big5;
+declare variable wJobCostCat char(3) character set big5;  
+declare variable wBudgetQty numeric(15,2);
+declare variable wCompletePct numeric(9,2);
+begin
+  for select JOB_NO_1,
+             JOB_NO_2,
+             FWO_NO ,
+             JOB_COST_CAT
+        from job_detail 
+        where hist_date >= :StartDate
+          and hist_date < :EndDate
+          and Job_Cost_Cat = :JobCostCat
+        group by job_no_1, job_no_2, Fwo_no, Job_cost_cat
+        into :wJobNo1,
+             :wJobNo2,
+             :wFWONo,
+             :wJobCostCat 
+  do
+  begin
+    wBudgetQty = 0;
+    wCompletePct = 0;
+    select Budget_Qty,
+           Complete_Percent
+      from FWO_Cost_Cat fcc
+      where fcc.Job_No_1 = :wJobNo1
+        and fcc.Job_No_2 = :wJobNo2
+        and fcc.FWO_No = :wFWONo
+        and fcc.Job_Cost_Cat = :wJobCostCat
+      into :wBudgetQty,
+           :wCompletePct;
+
+    if (wBudgetQty is null) then
+      wBudgetQty = 0;
+    if (wCompletePct is null) then
+      wCompletePct = 0;
+
+    insert into fwo_cost_cat_percent
+      (Job_No_1, 
+       Job_No_2, 
+       FWO_No, 
+       Job_Cost_Cat, 
+       Complete_Date, 
+       Complete_Percent, 
+       Budget_Qty)
+    values 
+      (:wJobNo1,
+       :wJobNo2,
+       :wFWONo,
+       :wJobCostCat,
+       :CompleteDate,
+       :wCompletePct,
+       :wBudgetQty); 
+  end
+end
+ ^
+ALTER PROCEDURE GET_DAILY_RECEIVE (IJOB_COST_CAT_1 CHAR(6) CHARACTER SET BIG_5,
+IJOB_COST_CAT_2 CHAR(6) CHARACTER SET BIG_5,
+IJOB_COST_CAT_3 CHAR(6) CHARACTER SET BIG_5,
+IJOB_COST_CAT_4 CHAR(6) CHARACTER SET BIG_5,
+IFINISH_DATE DATE)
+RETURNS (OJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+OJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+OJOB_DESC CHAR(60) CHARACTER SET BIG_5,
+OFWO_NO CHAR(4) CHARACTER SET BIG_5,
+OFWO_DESC CHAR(60) CHARACTER SET BIG_5,
+OFWO_QTY NUMERIC(15, 2),
+OORDER_DATE DATE,
+OORDERED_BY CHAR(8) CHARACTER SET BIG_5,
+OCOMPLETION_DATE DATE,
+OLAST_DATE DATE,
+OFINISH_DATE DATE,
+OSUBPRODUCTION_START_DATE DATE,
+ORECEIVE_DATE_1 DATE,
+ORECEIVE_DATE_2 DATE,
+ORECEIVE_DATE_3 DATE,
+ORECEIVE_DATE_4 DATE)
+AS 
+                    
+begin
+  for
+    select
+       distinct job_no_1, job_no_2, Fwo_no
+    from 
+       fwo_production
+    where ((job_cost_cat = :iJob_cost_cat_1) or
+           (job_cost_cat = :iJob_cost_cat_2) or
+           (job_cost_cat = :iJob_cost_cat_3) or
+           (job_cost_cat = :iJob_cost_cat_4)) and
+           (RECEIVE_DATE = :ifinish_date) 
+    into :ojob_no_1, :ojob_no_2, :oFwo_no
+    do
+      begin
+
+        select description
+        from  Job_File job
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 =:ojob_no_2))        
+        into :ojob_desc;
+
+        select description,
+                 fwo_qty,
+                 order_date,
+                 ordered_by,
+                 completion_date
+        from  Job_Fwo 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 =:ojob_no_2))        
+          and (fwo_no = :ofwo_no)
+        into :ofwo_desc,
+             :ofwo_qty,             
+             :oorder_date,
+             :oordered_by,
+             :ocompletion_date;
+
+        select receive_date
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_1)
+        into :oreceive_date_1;
+
+        select receive_date 
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_2)
+        into :oreceive_date_2;
+
+        select receive_date 
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_3)
+        into :oreceive_date_3;
+
+        select receive_date 
+        from Fwo_Production 
+        where ((job_no_1 = :ojob_no_1) 
+          and (job_no_2 = :ojob_no_2))
+          and (fwo_no = :ofwo_no)
+        and (job_cost_cat = :ijob_cost_cat_4)
+        into :oreceive_date_4;
+
+        suspend;
+      end
+end
+ ^
+ALTER PROCEDURE GET_LAST_SUBPRODUCTION (IJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+IJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+IFWO_NO CHAR(6) CHARACTER SET BIG_5,
+IJOB_COST_CAT CHAR(6) CHARACTER SET BIG_5)
+RETURNS (OSTART_DATE DATE,
+OEND_DATE DATE)
+AS 
+  
+declare variable wDate date; 
+declare variable wStartDate Date;
+declare variable wEndDate Date;
+begin
+  oStart_Date = null;
+  oEnd_Date = null;
+  select max(Start_Date)
+    from FWO_SubProduction fs
+    where fs.Job_No_1 = :iJob_No_1
+      and fs.Job_No_2 = :iJob_No_2
+      and fs.FWO_No = :iFWO_No
+      and fs.Job_Cost_Cat = :iJob_Cost_Cat
+    into :wDate;
+
+  for select Start_Date, End_Date
+        from FWO_SubProduction fs
+        where fs.Job_No_1 = :iJob_No_1
+          and fs.Job_No_2 = :iJob_No_2
+          and fs.FWO_No = :iFWO_No
+          and fs.Job_Cost_Cat = :iJob_Cost_Cat
+          and fs.Start_Date = :wDate
+        into :wStartDate,
+             :wEndDate
+  do
+  begin
+    if ((oStart_Date is null) or
+       (wEndDate is null)) then
+    begin
+      oStart_Date = :wStartDate;
+      oEnd_Date = :wEndDate;
+    end
+  end 
+  suspend;
+end
+ ^
+ALTER PROCEDURE GET_PRODUCTION_STATUS (IDATE DATE,
+IJOB_COST_CAT_1 CHAR(6) CHARACTER SET BIG_5,
+IJOB_COST_CAT_2 CHAR(6) CHARACTER SET BIG_5,
+IJOB_COST_CAT_3 CHAR(6) CHARACTER SET BIG_5,
+IJOB_COST_CAT_4 CHAR(6) CHARACTER SET BIG_5)
+RETURNS (OJOB_NO_1 CHAR(8) CHARACTER SET BIG_5,
+OJOB_NO_2 CHAR(2) CHARACTER SET BIG_5,
+OJOB_DESC CHAR(60) CHARACTER SET BIG_5,
+OFWO_NO CHAR(4) CHARACTER SET BIG_5,
+OFWO_DESC CHAR(60) CHARACTER SET BIG_5,
+OFWO_QTY NUMERIC(15, 2),
+OORDER_DATE DATE,
+OORDERED_BY CHAR(8) CHARACTER SET BIG_5,
+OCOMPLETION_DATE DATE,
+ORECEIVE_DATE_1 DATE,
+OSUBPRODUCTION_START_DATE_1 DATE,
+OLAST_DATE_1 DATE,
+ORECEIVE_DATE_2 DATE,
+OSUBPRODUCTION_START_DATE_2 DATE,
+OLAST_DATE_2 DATE,
+ORECEIVE_DATE_3 DATE,
+OSUBPRODUCTION_START_DATE_3 DATE,
+OLAST_DATE_3 DATE,
+ORECEIVE_DATE_4 DATE,
+OSUBPRODUCTION_START_DATE_4 DATE,
+OLAST_DATE_4 DATE)
+AS 
+            
+                
+begin
+  for
+    select
+       distinct job_no_1, job_no_2, Fwo_no 
+    from 
+       fwo_production
+    where ((job_cost_cat = :iJob_cost_cat_1) or
+           (job_cost_cat = :iJob_cost_cat_2) or
+           (job_cost_cat = :iJob_cost_cat_3) or
+           (job_cost_cat = :iJob_cost_cat_4)) and
+           ((FINISH_DATE = :iDate) or (FINISH_DATE is null))
+    into :ojob_no_1, :ojob_no_2, :oFwo_no
+  do
+    begin
+      select description
+      from job_file
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 
+      into :ojob_desc;
+
+      select description,
+             fwo_qty,
+             order_date,ordered_by,
+             completion_date
+      from job_fwo
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no 
+      into :ojob_desc,
+           :ofwo_qty,
+           :oorder_date,
+           :oordered_by,
+           :ocompletion_date;
+
+      select 
+        RECEIVE_DATE,
+        SUBPRODUCTION_START_DATE
+      from
+        fwo_production
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_1 
+      into :oreceive_date_1 , :osubproduction_start_date_1;
+
+      select 
+        LAST_DATE
+      from
+        fwo_cost_caT
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_1 
+      into :olast_date_1; 
+
+      select 
+        RECEIVE_DATE,
+        SUBPRODUCTION_START_DATE
+      from
+        fwo_production
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_2 
+      into :oreceive_date_2 , :osubproduction_start_date_2;
+      select 
+        LAST_DATE
+      from
+        fwo_cost_caT
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_2 
+      into :olast_date_2; 
+
+      select 
+        RECEIVE_DATE,
+        SUBPRODUCTION_START_DATE
+      from
+        fwo_production
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_3 
+      into :oreceive_date_3 , :osubproduction_start_date_3;
+
+      select 
+        LAST_DATE
+      from
+        fwo_cost_caT
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_3 
+      into :olast_date_3; 
+  
+      select 
+        RECEIVE_DATE,
+        SUBPRODUCTION_START_DATE
+      from
+        fwo_production
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_4 
+      into :oreceive_date_4 , :osubproduction_start_date_4;
+
+      select 
+        LAST_DATE
+      from
+        fwo_cost_caT
+      where 
+        job_no_1 = :ojob_no_1 and
+        job_no_2 = :ojob_no_2 and
+        fwo_no = :ofwo_no and
+        job_cost_cat = :ijob_cost_cat_4 
+      into :olast_date_4;         
+
+      suspend;
+    end
+end
+ ^
+SET TERM ; ^
+COMMIT WORK ;
+SET AUTODDL ON;
+SET TERM ^ ;
+/* Triggers only will work for SQL triggers */
+CREATE TRIGGER FWO_COST_CAT_PERCENT_INSERT FOR FWO_COST_CAT_PERCENT            
+ACTIVE BEFORE INSERT POSITION 0 
+as 
+declare variable wJobNo1 char(4) character set big5;
+declare variable wDate date;
+declare variable wRegRate numeric(9,2);
+declare variable wPremRate numeric(9,2);
+declare variable wCostCatUnit char(2) character set big5;
+declare variable wSubJobNo char(2) character set big5;
+begin
+  wDate = null;
+  select Job_No_1, complete_date
+    from FWO_COST_CAT fcc
+    where fcc.Job_No_1 = new.Job_No_1
+      and fcc.Job_No_2 = new.Job_No_2
+      and fcc.FWO_No = new.FWO_No
+      and fcc.Job_Cost_Cat = new.Job_Cost_Cat
+    into :wJobNo1,
+         :wDate;
+
+  if (wJobNo1 is null) then
+  begin
+    select Reg_Rate,
+           Prem_Rate,
+           Job_Cost_Cat_unit
+       from Job_Cost_File jcf
+       where jcf.Job_Cost_Cat = new.Job_Cost_Cat
+       into :wRegRate,
+            :wPremRate,
+            :wCostCatUnit;
+
+    select Sub_Job_No
+      from Job_FWO jf
+      where jf.Job_No_1 = new.Job_No_1
+        and jf.Job_NO_2 = new.Job_No_2
+        and jf.FWO_No = new.FWO_No
+      into :wSubJobNo;
+
+    insert into FWO_Cost_Cat
+      (Job_No_1, Job_No_2, FWO_No,
+       Job_Cost_Cat, Job_Cost_Cat_Unit,
+       Reg_Rate, Prem_Rate,
+       Budget_Amt, Budget_Qty,
+       Job_Reg_Qty, Job_Prem_Qty,
+       Job_Reg_Amt, Job_Prem_Amt,
+       First_Date, Sub_Job_No, Complete_Percent, Last_Date, Complete_Date)
+    values
+      (new.Job_No_1, new.Job_No_2, new.FWO_No,
+       new.Job_Cost_Cat, :wCostCatUnit,
+       :wRegRate, :wPremRate,
+       0, new.Budget_Qty,
+       0, 0,
+       0, 0,
+       null, :wSubJobNo, new.Complete_Percent, null, new.Complete_Date);
+  end
+
+  if (wJobNo1 is not null) then
+  begin
+    if ((wDate is not null) and
+       (wDate < new.Complete_Date)) then
+      update FWO_COST_CAT fcc
+        set fcc.Complete_Date = new.Complete_Date,
+            fcc.Complete_Percent = new.Complete_Percent,
+            fcc.Budget_Qty = new.Budget_Qty
+        where fcc.Job_No_1 = new.Job_No_1
+          and fcc.Job_No_2 = new.Job_No_2
+          and fcc.FWO_No = new.FWO_No
+          and fcc.Job_Cost_Cat = new.Job_Cost_Cat;
+
+    if ((wDate is null) or
+       (wDate >= new.Complete_Date)) then
+      update FWO_Cost_Cat fcc
+        set fcc.Budget_Qty = new.Budget_Qty
+        where fcc.Job_No_1 = new.Job_No_1
+          and fcc.Job_No_2 = new.Job_No_2
+          and fcc.FWO_No = new.FWO_No
+          and fcc.Job_Cost_Cat = new.Job_Cost_Cat;
+  end
+end
+ ^
+CREATE TRIGGER SUBCONTRACT_DETAIL_UPDATE FOR SUBCONTRACT_DETAIL              
+ACTIVE AFTER UPDATE POSITION 0 
+AS
+BEGIN
+  if ((old.SubContract_No <> new.SubContract_No) or
+     (old.Line_No <> new.Line_No)) then
+    update SubContract_Payment sp
+      set sp.SubContract_No = new.SubContract_No,
+          sp.Line_No = new.Line_No
+      where sp.SubContract_No = old.SubContract_No
+        and sp.Line_No = old.Line_No;
+END
+ ^
+CREATE TRIGGER SUBCONTRACT_DETAIL_DELETE FOR SUBCONTRACT_DETAIL              
+ACTIVE AFTER DELETE POSITION 0 
+AS
+BEGIN
+    delete from SubContract_Payment sp
+      where sp.SubContract_No = old.SubContract_No
+        and sp.Line_No = old.Line_No;
+END
+ ^
+CREATE TRIGGER FWO_PRODUCTION_DELETE FOR FWO_PRODUCTION                  
+ACTIVE AFTER DELETE POSITION 0 
+as 
+begin
+  delete from FWO_Subproduction fs
+    where fs.Job_No_1 = old.Job_No_1
+      and fs.Job_No_2 = old.Job_No_2
+      and fs.FWO_No = old.FWO_No
+      and fs.Job_Cost_Cat = old.Job_Cost_Cat;
+end
+ ^
+CREATE TRIGGER FWO_PRODUCTION_UPDATE FOR FWO_PRODUCTION                  
+ACTIVE AFTER UPDATE POSITION 0 
+as 
+begin
+  if ((old.Job_No_1 <> new.Job_No_1) or
+     (old.Job_No_2 <> new.Job_No_2) or
+     (old.FWO_No <> new.FWO_No) or
+     (old.Job_Cost_Cat <> new.Job_Cost_Cat)) then
+     update FWO_Subproduction 
+       set Job_No_1 = new.Job_No_1,
+           Job_No_2 = new.Job_No_2,
+           FWO_No = new.FWO_No,
+           Job_Cost_Cat = new.Job_Cost_Cat
+       where Job_No_1 = old.Job_No_1
+        and Job_No_2 = old.Job_No_2
+        and FWO_No = old.FWO_No
+        and Job_Cost_Cat = old.Job_Cost_Cat;
+end
+ ^
+CREATE TRIGGER FWO_UPDATE FOR FWO_CAT                         
+ACTIVE AFTER UPDATE POSITION 0 
+AS
+BEGIN
+  if (old.FWO_CAT <> new.FWO_CAT) then
+  begin
+    update Job_Fwo jf
+      set jf.FWO_CAT = new.FWO_CAT
+      where jf.FWO_CAT = old.FWO_CAT;
+  end
+END
+ ^
+CREATE TRIGGER JOB_DETAIL_INSERT FOR JOB_DETAIL                      
+ACTIVE BEFORE INSERT POSITION 0 
+as 
+declare variable wJobNo1 char(4) character set big5;
+declare variable wCostCatUnit char(2) character set big5;
+declare variable wRegRate numeric(15,2);
+declare variable wPremRate numeric(15,2);
+declare variable wDate date;
+declare variable wLastDate date;
+begin
+
+  select Job_Cost_Cat_Unit,
+         Reg_Rate,
+         Prem_Rate
+    from Job_Cost_File jcf
+    where jcf.Job_Cost_Cat = new.Job_Cost_Cat
+    into :wCostCatUnit,
+         :wRegRate,
+         :wPremRate;
+
+  wJobNo1 = null;
+  select Job_No_1 
+    from Job_Cost_Cat jcc
+    where jcc.Job_No_1 = new.Job_No_1
+      and jcc.Job_No_2 = new.Job_No_2
+      and jcc.Sub_Job_No = new.Sub_Job_No
+      and jcc.Job_Cost_Cat = new.Job_Cost_Cat
+    into :wJobNo1;
+  if (wJobNo1 is null) then
+  begin
+    if (new.Qty_Type = 'R') then
+    begin
+      insert into Job_Cost_Cat 
+        (Job_No_1, Job_No_2, Sub_Job_No,
+         Reg_Rate, Prem_Rate,
+         Budget_Qty, Budget_Amt,
+         Job_Reg_Qty, Job_Prem_Qty,
+         Draft_Budget_Qty, Draft_Budget_Amt,
+         Job_Reg_Amt, Job_Prem_Amt,
+         Job_Cost_Cat, Job_Cost_Cat_Unit)
+      values
+        (new.Job_No_1, new.Job_No_2, new.Sub_Job_No,
+         :wRegRate, :wPremRate,
+         0, 0,
+         new.Detail_Qty, 0,
+         0, 0,
+         new.Detail_Amt, 0,
+         new.Job_Cost_Cat, :wCostCatUnit);
+    end
+    if (new.Qty_Type <> 'R') then
+    begin
+      insert into Job_Cost_Cat
+        (Job_No_1, Job_No_2, Sub_Job_No,
+         Reg_Rate, Prem_Rate,
+         Budget_Qty, Budget_Amt,
+         Job_Reg_Qty, Job_Prem_Qty,
+         Draft_Budget_Qty, Draft_Budget_Amt,
+         Job_Reg_Amt, Job_Prem_Amt,
+         Job_Cost_Cat, Job_Cost_Cat_Unit)
+      values
+        (new.Job_No_1, new.Job_No_2, new.Sub_Job_No,
+         :wRegRate, :wPremRate,
+         0, 0,
+         0, new.Detail_Qty,
+         0, 0,
+         0, new.Detail_Amt,
+         new.Job_Cost_Cat, :wCostCatUnit);
+    end
+  end
+  if (wJobNo1 is not null) then
+  begin
+    if (new.Qty_Type = 'R') then
+    begin
+      update Job_Cost_Cat jcc
+        set jcc.Job_Reg_Qty = jcc.Job_Reg_Qty + new.Detail_Qty,
+            jcc.Job_Reg_Amt = jcc.Job_Reg_Amt + new.Detail_Amt
+        where jcc.Job_No_1 = new.Job_No_1
+          and jcc.Job_No_2 = new.Job_No_2
+          and jcc.Sub_Job_No = new.Sub_Job_No
+          and jcc.Job_Cost_Cat = new.Job_Cost_Cat;
+    end
+    if (new.Qty_Type <> 'R') then
+    begin
+      update Job_Cost_Cat jcc
+        set jcc.Job_Prem_Qty = jcc.Job_Prem_Qty + new.Detail_Qty,
+            jcc.Job_Prem_Amt = jcc.Job_Prem_Amt + new.Detail_Amt
+        where jcc.Job_No_1 = new.Job_No_1
+          and jcc.Job_No_2 = new.Job_No_2
+          and jcc.Sub_Job_No = new.Sub_Job_No
+          and jcc.Job_Cost_Cat = new.Job_Cost_Cat;
+    end
+  end
+
+  wJobNo1 = null;
+  select Job_No_1, First_Date, Last_Date
+    from FWO_Cost_Cat fcc
+    where fcc.Job_No_1 = new.Job_No_1
+      and fcc.Job_No_2 = new.Job_No_2
+      and fcc.FWO_No = new.FWO_No
+      and fcc.Job_Cost_Cat = new.Job_Cost_Cat
+    into :wJobNo1,
+         :wDate,
+         :wLastDate;
+
+  if (wJobNo1 is null) then
+  begin
+    if (new.Qty_Type = 'R') then
+    begin
+      insert into FWO_Cost_Cat
+        (Job_No_1, Job_No_2, FWO_No,
+         Job_Cost_Cat, Job_Cost_Cat_Unit,
+         Reg_Rate, Prem_Rate,
+         Budget_Amt, Budget_Qty,
+         Job_Reg_Qty, Job_Prem_Qty,
+         Job_Reg_Amt, Job_Prem_Amt,
+         First_Date, Sub_Job_No, Complete_Percent, Last_Date)
+      values
+        (new.Job_No_1, new.Job_No_2, new.FWO_No,
+         new.Job_Cost_Cat, :wCostCatUnit,
+         :wRegRate, :wPremRate,
+         0, 0,
+         new.Detail_Qty, 0,
+         new.Detail_Amt, 0,
+         new.Hist_Date, new.Sub_Job_No, 0, new.Hist_Date);
+    end
+    if (new.Qty_Type <> 'R') then
+    begin
+      insert into FWO_Cost_Cat
+        (Job_No_1, Job_No_2, FWO_No,
+         Job_Cost_Cat, Job_Cost_Cat_Unit,
+         Reg_Rate, Prem_Rate,
+         Budget_Amt, Budget_Qty,
+         Job_Reg_Qty, Job_Prem_Qty,
+         Job_Reg_Amt, Job_Prem_Amt,
+         First_Date, Sub_Job_No, Complete_Percent, Last_Date)
+      values
+        (new.Job_No_1, new.Job_No_2, new.FWO_No,
+         new.Job_Cost_Cat, :wCostCatUnit,
+         :wRegRate, :wPremRate,
+         0, 0,
+         0, new.Detail_Qty,
+         0, new.Detail_Amt,
+         new.Hist_Date, Sub_Job_No, 0, new.Hist_Date);
+    end
+  end
+  if (wJobNo1 is not null) then
+  begin
+    if (new.Hist_Date < :wDate) then
+      wDate = new.Hist_Date;
+    if (new.Hist_Date > :wLastDate) then
+      wLastDate = new.Hist_Date;
+
+    if (new.Qty_Type = 'R') then
+    begin
+      update FWO_Cost_Cat fcc
+        set fcc.Job_Reg_Qty = fcc.Job_Reg_Qty + new.Detail_Qty,
+            fcc.Job_Reg_Amt = fcc.Job_Reg_Amt + new.Detail_Amt,
+            fcc.First_Date = :wDate,
+            fcc.Last_Date = :wLastDate
+        where fcc.Job_No_1 = new.Job_No_1
+          and fcc.Job_No_2 = new.Job_No_2
+          and fcc.FWO_No = new.FWO_No
+          and fcc.Job_Cost_Cat = new.Job_Cost_Cat;
+    end
+    if (new.Qty_Type <> 'R') then
+    begin
+      update FWO_Cost_Cat fcc
+        set fcc.Job_Prem_Qty = fcc.Job_Prem_Qty + new.Detail_Qty,
+            fcc.Job_Prem_Amt = fcc.Job_Prem_Amt + new.Detail_Amt,
+            fcc.First_Date = :wDate,
+            fcc.Last_Date = :wLastDate
+        where fcc.Job_No_1 = new.Job_No_1
+          and fcc.Job_No_2 = new.Job_No_2
+          and fcc.FWO_No = new.FWO_No
+          and fcc.Job_Cost_Cat = new.Job_Cost_Cat;
+    end
+  end
+
+  if (new.Qty_Type = 'R') then
+    update Sub_Job_File
+      set Job_Reg_Amt = Job_Reg_Amt + new.Detail_Amt
+      where Job_No_1 = new.Job_No_1
+        and Job_No_2 = new.Job_No_2
+        and Sub_Job_No = new.Sub_Job_No;
+  if (new.Qty_Type <> 'R') then
+    update Sub_Job_File
+      set Job_Prem_Amt = Job_Prem_Amt + new.Detail_Amt
+      where Job_No_1 = new.Job_No_1
+        and Job_No_2 = new.Job_No_2
+        and Sub_Job_No = new.Sub_Job_No; 
+end
+ ^
+CREATE TRIGGER JOB_DETAIL_UPDATE FOR JOB_DETAIL                      
+ACTIVE BEFORE UPDATE POSITION 0 
+as 
+declare variable wJobNo1 char(4) character set big5;
+declare variable wCostCatUnit char(2) character set big5;
+declare variable wRegRate numeric(15,2);
+declare variable wPremRate numeric(15,2);
+declare variable oRegQty numeric(15,4);
+declare variable oRegAmt numeric(15,2);
+declare variable oPremQty numeric(15,4);
+declare variable oPremAmt numeric(15,2);
+declare variable nRegQty numeric(15,2);
+declare variable nRegAmt numeric(15,2);
+declare variable nPremQty numeric(15,2);
+declare variable nPremAmt numeric(15,2);
+declare variable wDate Date;
+declare variable wLastDate date;
+begin
+  if ((new.Qty_Type <> old.Qty_Type) or
+     (new.Detail_Amt <> old.Detail_Amt) or
+     (new.Detail_Qty <> old.Detail_Qty) or
+     (new.Job_No_1 <> old.Job_No_1) or
+     (new.Job_No_2 <> old.Job_No_2) or
+     (new.Sub_Job_No <> old.Sub_Job_No) or
+     (new.FWO_No <> old.FWO_No) or
+     (new.Job_Cost_Cat <> old.Job_Cost_Cat)) then
+  begin
+    oRegQty = 0;
+    oPremQty = 0;
+    oRegAmt = 0;
+    oPremAmt = 0;
+    nRegQty = 0;
+    nPremQty = 0;
+    nRegAmt = 0;
+    nPremAmt = 0;
+    if (old.Qty_Type = 'R') then
+    begin
+      oRegQty = old.Detail_Qty;
+      oRegAmt = old.Detail_Amt;
+    end
+    if (old.Qty_Type <> 'R') then
+    begin
+      oPremQty = old.Detail_Qty;
+      oPremAmt = old.Detail_Amt;
+    end
+    if (new.Qty_Type = 'R') then
+    begin
+      nRegQty = new.Detail_Qty;
+      nRegAmt = new.Detail_Amt;
+    end
+    if (new.Qty_Type <> 'R') then
+    begin
+      nPremQty = new.Detail_Qty;
+      nPremAmt = new.Detail_Amt;
+    end
+
+    update Job_Cost_Cat jcc
+      set jcc.Job_Reg_Qty = jcc.Job_Reg_Qty - :oRegQty,
+          jcc.Job_Reg_Amt = jcc.Job_Reg_Amt - :oRegAmt,
+          jcc.Job_Prem_Qty = jcc.Job_Prem_Qty - :oPremQty,
+          jcc.Job_Prem_Amt = jcc.Job_Prem_Amt - :oPremAmt
+      where jcc.Job_No_1 = old.Job_No_1
+        and jcc.Job_No_2 = old.Job_No_2
+        and jcc.Sub_Job_No = old.Sub_Job_No
+        and jcc.Job_Cost_Cat = old.Job_Cost_Cat;
+
+    update FWO_Cost_Cat fcc
+      set fcc.Job_Reg_Qty = fcc.Job_Reg_Qty - :oRegQty,
+          fcc.Job_Reg_Amt = fcc.Job_Reg_Amt - :oRegAmt,
+          fcc.Job_Prem_Qty = fcc.Job_Prem_Qty - :oPremQty,
+          fcc.Job_Prem_Amt = fcc.Job_Prem_Amt - :oPremAmt
+      where fcc.Job_No_1 = old.Job_No_1
+        and fcc.Job_No_2 = old.Job_No_2
+        and fcc.FWO_No = old.FWO_No
+        and fcc.Job_Cost_Cat = old.Job_Cost_Cat;
+
+    update Sub_Job_File sjf
+      set sjf.Job_Reg_Amt = sjf.Job_Reg_Amt - :oRegAmt,
+          sjf.Job_Prem_Amt = sjf.Job_Prem_Amt - :oPremAmt
+      where sjf.Job_No_1 = old.Job_No_1
+        and sjf.Job_No_2 = old.Job_No_2
+        and sjf.Sub_Job_No = old.Sub_Job_No;
+
+    update Sub_Job_File sjf
+      set sjf.Job_Reg_Amt = sjf.Job_Reg_Amt + :nRegAmt,
+          sjf.Job_Prem_Amt = sjf.Job_Prem_Amt + :nPremAmt
+      where sjf.Job_No_1 = new.Job_No_1
+        and sjf.Job_No_2 = new.Job_No_2
+        and sjf.Sub_Job_No = new.Sub_Job_No;
+
+    select Job_Cost_Cat_Unit,
+           Reg_Rate,
+           Prem_Rate
+      from Job_Cost_File jcf
+      where jcf.Job_Cost_Cat = new.Job_Cost_Cat
+      into :wCostCatUnit,
+           :wRegRate,
+           :wPremRate;
+
+    wJobNo1 = new.Job_No_1;
+    if ((new.Job_No_1 <> old.Job_No_1) or
+       (new.Job_No_2 <> old.Job_No_2) or
+       (new.Sub_Job_No <> old.Sub_Job_No) or
+       (new.Job_Cost_Cat <> old.Job_Cost_Cat)) then
+    begin
+      wJobNo1 = null;
+      select Job_No_1
+        from Job_Cost_Cat jcc
+        where jcc.Job_No_1 = new.Job_No_1
+          and jcc.Job_No_2 = new.Job_No_2
+          and jcc.Sub_Job_No = new.Sub_Job_No
+          and jcc.Job_Cost_Cat = new.Job_Cost_Cat
+        into :wJobNo1;
+    end
+
+    if (wJobNo1 is null) then
+      insert into Job_Cost_Cat
+        (Job_No_1, Job_No_2, Sub_Job_No,
+         Reg_Rate, Prem_Rate,
+         Budget_Qty, Budget_Amt,
+         Job_Reg_Qty, Job_Prem_Qty,
+         Draft_Budget_Qty, Draft_Budget_Amt,
+         Job_Reg_Amt, Job_Prem_Amt,
+         Job_Cost_Cat, Job_Cost_Cat_Unit)
+      values
+        (new.Job_No_1, new.Job_No_2, new.Sub_Job_No,
+         :wRegRate, :wPremRate,
+         0, 0,
+         :nRegQty, :nPremQty,
+         0, 0,
+         :nRegAmt, :nPremAmt,
+         new.Job_Cost_Cat, :wCostCatUnit);
+
+    if (wJobNo1 is not null) then
+      update Job_Cost_Cat jcc
+        set jcc.Job_Reg_Qty = jcc.Job_Reg_Qty + :nRegQty,
+            jcc.Job_Reg_Amt = jcc.Job_Reg_Amt + :nRegAmt,
+            jcc.Job_Prem_Qty = jcc.Job_Prem_Qty + :nPremQty,
+            jcc.Job_Prem_Amt = jcc.Job_Prem_Amt + :nPremAmt
+        where jcc.Job_No_1 = new.Job_No_1
+          and jcc.Job_No_2 = new.Job_No_2
+          and jcc.Sub_Job_No = new.Sub_Job_No
+          and jcc.Job_Cost_Cat = new.Job_Cost_Cat;
+
+    wJobNo1 = new.Job_No_1;
+    if ((new.Job_No_1 <> old.Job_No_1) or
+       (new.Job_No_2 <> old.Job_No_2) or
+       (new.FWO_No <> old.FWO_No) or
+       (new.Job_Cost_Cat <> old.Job_Cost_Cat)) then
+    begin
+      wJobNo1 = null;
+      select Job_No_1, First_Date, Last_Date
+        from FWO_Cost_Cat fcc
+        where fcc.Job_No_1 = new.Job_No_1
+          and fcc.Job_No_2 = new.Job_No_2
+          and fcc.FWO_No = new.FWO_No
+          and fcc.Job_Cost_Cat = new.Job_Cost_Cat
+        into :wJobNo1, 
+             :wDate,
+             :wLastDate;
+    end
+
+    if (wJobNo1 is null) then
+       insert into FWO_Cost_Cat
+        (Job_No_1, Job_No_2, FWO_No,
+         Job_Cost_Cat, Job_Cost_Cat_Unit,
+         Reg_Rate, Prem_Rate,
+         Budget_Amt, Budget_Qty,
+         Job_Reg_Qty, Job_Prem_Qty,
+         Job_Reg_Amt, Job_Prem_Amt,
+         First_Date, Sub_Job_No, Complete_Percent, Last_Date)
+      values
+        (new.Job_No_1, new.Job_No_2, new.FWO_No,
+         new.Job_Cost_Cat, :wCostCatUnit,
+         :wRegRate, :wPremRate,
+         0, 0,
+         :nRegQty, :nPremQty,
+         :nRegAmt, :nPremAmt,
+         new.Hist_Date, new.Sub_Job_No, 0, new.Hist_Date);
+    if (wJobNo1 is not null) then
+    begin
+      if (new.Hist_Date < :wDate) then
+        wDate = new.Hist_Date;
+      if (new.Hist_Date > :wLastDate) then
+        wLastDate = new.Hist_Date;
+
+      update FWO_Cost_Cat fcc
+        set fcc.Job_Reg_Qty = fcc.Job_Reg_Qty + :nRegQty,
+            fcc.Job_Reg_Amt = fcc.Job_Reg_Amt + :nRegAmt,
+            fcc.Job_Prem_Qty = fcc.Job_Prem_Qty + :nPremQty,
+            fcc.Job_Prem_Amt = fcc.Job_Prem_Amt + :nPremAmt,
+            fcc.First_Date = :wDate,
+            fcc.Last_Date = :wLastDate
+        where fcc.Job_No_1 = new.Job_No_1
+          and fcc.Job_No_2 = new.Job_No_2
+          and fcc.FWO_No = new.FWO_No
+          and fcc.Job_Cost_Cat = new.Job_Cost_Cat;
+    end 
+  end
+end
+ ^
+CREATE TRIGGER FWO_SUBPRODUCTION_INSERT FOR FWO_SUBPRODUCTION               
+ACTIVE AFTER INSERT POSITION 0 
+as 
+declare variable wDate date;
+begin
+  select SubProduction_Start_Date 
+    from FWO_Production fp
+    where fp.Job_No_1 = new.Job_No_1
+      and fp.Job_No_2 = new.Job_No_2
+      and fp.FWO_No = new.FWO_No
+      and fp.Job_Cost_Cat = new.Job_Cost_Cat
+    into :wDate;
+  if ((wDate < new.Start_date) or
+     (new.End_Date is null)) then
+    update FWO_Production fp
+      set SubProduction_Start_Date = new.Start_Date,
+          SubProduction_End_Date = new.End_Date
+      where fp.Job_No_1 = new.Job_No_1
+        and fp.Job_No_2 = new.Job_No_2
+        and fp.FWO_No = new.FWO_No
+        and fp.Job_Cost_Cat = new.Job_Cost_Cat;
+end
+ ^
+CREATE TRIGGER FWO_COST_CAT_UPDATE FOR FWO_COST_CAT                    
+ACTIVE BEFORE UPDATE POSITION 0 
+as 
+declare variable i integer;
+begin
+  i = 0;
+  if ((new.Budget_Qty <> old.Budget_Qty) or
+     (new.Budget_Amt <> old.Budget_Amt)) then
+  begin
+    update Job_Cost_Cat jcc
+      set jcc.Budget_Qty = jcc.Budget_Qty - old.Budget_Qty,
+          jcc.Budget_Amt = jcc.Budget_Amt - old.Budget_Amt
+      where jcc.Job_No_1 = old.Job_No_1
+        and jcc.Job_No_2 = old.Job_No_2
+        and jcc.Sub_Job_No = old.Sub_Job_No
+        and jcc.Job_Cost_Cat = old.Job_Cost_Cat;
+    update Job_Cost_Cat jcc
+      set jcc.Budget_Qty = jcc.Budget_Qty + new.Budget_Qty,
+          jcc.Budget_Amt = jcc.Budget_Amt + new.Budget_Amt
+      where jcc.Job_No_1 = new.Job_No_1
+        and jcc.Job_No_2 = new.Job_No_2
+        and jcc.Sub_Job_No = new.Sub_Job_No
+        and jcc.Job_Cost_Cat = new.Job_Cost_Cat;
+  end 
+end
+ ^
+CREATE TRIGGER FWO_COST_CAT_DELETE FOR FWO_COST_CAT                    
+ACTIVE BEFORE DELETE POSITION 0 
+as 
+begin
+  update Job_Cost_Cat jcc
+    set jcc.Budget_Qty = Budget_Qty - old.Budget_Qty,
+        jcc.Budget_Amt = Budget_Amt - old.Budget_Amt
+    where jcc.Job_No_1 = old.Job_No_1
+      and jcc.Job_No_2 = old.Job_No_2
+      and jcc.Sub_Job_No = old.Sub_Job_No
+      and jcc.Job_Cost_Cat = old.Job_Cost_Cat;
+end
+ ^
+CREATE TRIGGER SUBCONTRACT_DELETE FOR SUBCONTRACT                     
+ACTIVE AFTER DELETE POSITION 0 
+AS
+BEGIN
+    delete from SubContract_Detail sd
+      where sd.SubContract_No = old.SubContract_No;
+END
+ ^
+CREATE TRIGGER FWO_SUBPRODUCTION_DELETE FOR FWO_SUBPRODUCTION               
+ACTIVE AFTER DELETE POSITION 0 
+as 
+declare variable wStartDate date;
+declare variable wEndDate date;
+begin
+
+  select * 
+    from Get_Last_SubProduction (old.Job_No_1, old.Job_No_2, old.FWO_No, old.Job_Cost_Cat)
+    into :wStartDate,
+         :wEndDate;
+    update FWO_Production fp
+      set SubProduction_Start_Date = :wStartDate,
+          SubProduction_End_Date = :wEndDate
+      where fp.Job_No_1 = old.Job_No_1
+        and fp.Job_No_2 = old.Job_No_2
+        and fp.FWO_No = old.FWO_No
+        and fp.Job_Cost_Cat = old.Job_Cost_Cat;
+end
+ ^
+CREATE TRIGGER FWO_SUBPRODUCTION_UPDATE FOR FWO_SUBPRODUCTION               
+ACTIVE AFTER UPDATE POSITION 0 
+as 
+declare variable wDate date;
+begin
+  
+  if ((new.Start_date <> old.Start_date) or
+     (new.End_Date <> old.End_Date)) then
+  begin
+   select SubProduction_Start_Date 
+    from FWO_Production fp
+    where fp.Job_No_1 = new.Job_No_1
+      and fp.Job_No_2 = new.Job_No_2
+      and fp.FWO_No = new.FWO_No
+      and fp.Job_Cost_Cat = new.Job_Cost_Cat
+    into :wDate;
+
+    if ((wDate <= new.Start_Date) or
+       (wDate is null)) then
+      update FWO_Production fp
+        set SubProduction_Start_Date = new.Start_Date,
+            SubProduction_End_Date = new.End_Date
+        where fp.Job_No_1 = new.Job_No_1
+          and fp.Job_No_2 = new.Job_No_2
+          and fp.FWO_No = new.FWO_No
+          and fp.Job_Cost_Cat = new.Job_Cost_Cat;
+  end
+end
+ ^
+CREATE TRIGGER FWO_COST_CAT_PERCENT_DELETE FOR FWO_COST_CAT_PERCENT            
+ACTIVE AFTER DELETE POSITION 0 
+as 
+declare variable wDate date;
+declare variable wPercent numeric(6,2);
+begin
+
+  wDate = null;
+  wPercent = 0;
+
+  select Complete_Date, Complete_Percent
+    from FWO_Cost_Cat_Percent fccp1
+    where fccp1.Job_No_1 = old.Job_No_1
+      and fccp1.Job_No_2 = old.Job_No_2
+      and fccp1.FWO_No = old.FWO_No
+      and fccp1.Job_Cost_Cat = old.Job_Cost_Cat
+      and fccp1.Complete_Date =
+           (select Max(Complete_Date)
+              from FWO_Cost_Cat_Percent fccp2
+              where fccp2.Job_No_1 = old.Job_No_1
+                and fccp2.Job_No_2 = old.Job_No_2
+                and fccp2.FWO_No = old.FWO_No
+                and fccp2.Job_Cost_Cat = old.Job_Cost_Cat)
+     into :wDate,
+          :wPercent;
+
+   update FWO_Cost_Cat fcc
+     set fcc.Complete_Date = :wDate,
+         fcc.Complete_Percent = :wPercent
+    where fcc.Job_No_1 = old.Job_No_1
+      and fcc.Job_No_2 = old.Job_No_2
+      and fcc.FWO_No = old.FWO_No
+      and fcc.Job_Cost_Cat = old.Job_Cost_Cat;
+end
+ ^
+CREATE TRIGGER JOB_FWO_UPDATE FOR JOB_FWO                         
+ACTIVE AFTER UPDATE POSITION 0 
+as 
+begin
+  if ((old.Job_No_1 <> new.Job_No_1) or
+     (old.Job_No_2 <> new.Job_No_2) or
+     (old.Sub_Job_No <> new.Sub_Job_No) or
+     (old.FWO_No <> new.FWO_No)) then
+  begin
+    if ((old.Job_No_1 <> new.Job_No_1) or
+       (old.Job_No_2 <> new.Job_No_2) or
+       (old.FWO_No <> new.FWO_No)) then
+    begin
+      update Job_FWO_Detail
+        set Job_No_1 = new.Job_No_1,
+            Job_No_2 = new.Job_No_2,
+            FWO_No = new.FWO_No
+      where Job_No_1 = old.Job_No_1
+        and Job_No_2 = old.Job_No_2
+        and FWO_No = old.FWO_No;
+
+      update FWO_Cost_Cat_Percent
+        set Job_No_1 = new.Job_No_1,
+            Job_No_2 = new.Job_No_2,
+            FWO_No = new.FWO_No
+      where Job_No_1 = old.Job_No_1
+        and Job_No_2 = old.Job_No_2
+        and FWO_No = old.FWO_No;
+    end
+
+    update FWO_Cost_Cat
+      set Job_No_1 = new.Job_No_1,
+          Job_No_2 = new.Job_No_2,
+          FWO_No = new.FWO_No,
+          Sub_Job_No = new.Sub_Job_No
+    where Job_No_1 = old.Job_No_1
+      and Job_No_2 = old.Job_No_2
+      and FWO_No = old.FWO_No;
+
+  end
+end
+ ^
+CREATE TRIGGER FWO_COST_CAT_PERCENT_UPDATE FOR FWO_COST_CAT_PERCENT            
+ACTIVE AFTER UPDATE POSITION 0 
+as 
+declare variable wDate date;
+declare variable wPercent numeric(6,2);
+begin
+
+  if ((new.Complete_Date <> old.Complete_Date) or
+     (new.Complete_Percent <> old.Complete_Percent) or
+     (new.Budget_Qty <> old.Budget_Qty)) then
+  begin
+    wDate = null;
+    wPercent = 0;
+
+    select Complete_Date, Complete_Percent
+      from FWO_Cost_Cat_Percent fccp1
+      where fccp1.Job_No_1 = old.Job_No_1
+        and fccp1.Job_No_2 = old.Job_No_2
+        and fccp1.FWO_No = old.FWO_No
+        and fccp1.Job_Cost_Cat = old.Job_Cost_Cat
+        and fccp1.Complete_Date =
+             (select Max(Complete_Date)
+                from FWO_Cost_Cat_Percent fccp2
+                where fccp2.Job_No_1 = old.Job_No_1
+                  and fccp2.Job_No_2 = old.Job_No_2
+                  and fccp2.FWO_No = old.FWO_No
+                  and fccp2.Job_Cost_Cat = old.Job_Cost_Cat)
+       into :wDate,
+            :wPercent;
+
+     if ((wDate is null) or
+        (wDate < new.Complete_Date)) then
+     begin
+       wDate = new.Complete_Date;
+       wPercent = new.Complete_Percent;
+     end
+
+     update FWO_Cost_Cat fcc
+       set fcc.Complete_Date = :wDate,
+           fcc.Complete_Percent = :wPercent,
+           fcc.Budget_Qty = new.Budget_Qty
+      where fcc.Job_No_1 = old.Job_No_1
+        and fcc.Job_No_2 = old.Job_No_2
+        and fcc.FWO_No = old.FWO_No
+        and fcc.Job_Cost_Cat = old.Job_Cost_Cat;
+  end
+end
+ ^
+CREATE TRIGGER FWO_COST_CAT_INSERT FOR FWO_COST_CAT                    
+ACTIVE BEFORE INSERT POSITION 0 
+as 
+begin
+  if ((new.Budget_Qty <> 0) or
+     (new.Budget_Amt <> 0)) then
+    update Job_Cost_Cat jcc
+      set jcc.Budget_Qty = jcc.Budget_Qty + new.Budget_Qty,
+          jcc.Budget_Amt = jcc.Budget_Amt + new.Budget_Amt
+      where jcc.Job_No_1 = new.Job_No_1
+        and jcc.Job_No_2 = new.Job_No_2
+        and jcc.Sub_Job_No = new.Sub_Job_No
+        and jcc.Job_Cost_Cat = new.Job_Cost_Cat; 
+end
+ ^
+CREATE TRIGGER JOB_COST_FILE_UPDATE FOR JOB_COST_FILE                   
+ACTIVE BEFORE UPDATE POSITION 0 
+as
+begin
+  if (new.job_cost_cat <> old.job_cost_cat) then
+  begin
+
+    update job_DETAIL jd
+      set jd.job_cost_cat = new.job_cost_cat
+      where jd.job_cost_cat = old.job_cost_cat;
+
+    update FWO_COST_CAT fcc
+      set fcc.job_cost_cat = new.job_cost_cat
+      where fcc.job_cost_cat = old.job_cost_cat;
+
+    update Job_Cost_Cat jcc
+      set jcc.Job_Cost_Cat = new.Job_Cost_Cat
+      where jcc.Job_Cost_Cat = old.Job_Cost_Cat;
+  end
+end
+ ^
+CREATE TRIGGER JOB_DETAIL_DELETE FOR JOB_DETAIL                      
+ACTIVE AFTER DELETE POSITION 0 
+as 
+declare variable wRegQty numeric(15,4);
+declare variable wPremQty numeric(15,4);
+declare variable wRegAmt numeric(15,2);
+declare variable wPremAmt numeric(15,2);
+begin
+  wRegQty = 0;
+  wRegAmt = 0;
+  wPremQty = 0;
+  wPremAmt = 0;
+  if (old.Qty_Type = 'R') then
+  begin
+    wRegQty = old.Detail_Qty;
+    wRegAmt = old.Detail_Amt;
+  end
+  if (old.Qty_Type <> 'R') then
+  begin
+    wPremQty = old.Detail_Qty;
+    wPremAmt = old.Detail_Amt;
+  end
+  update Job_Cost_Cat jcc
+    set jcc.Job_Reg_Qty = jcc.Job_Reg_Qty - :wRegQty,
+        jcc.Job_Reg_Amt = jcc.Job_Reg_Amt - :wRegAmt,
+        jcc.Job_Prem_Qty = jcc.Job_Prem_Qty - :wPremQty,
+        jcc.Job_Prem_Amt = jcc.Job_Prem_Amt - :wPremAmt
+    where jcc.Job_No_1 = old.Job_No_1
+      and jcc.Job_No_2 = old.Job_No_2
+      and jcc.Sub_Job_No = old.Sub_Job_No
+      and jcc.Job_Cost_Cat = old.Job_Cost_Cat;
+  update FWO_Cost_Cat fcc
+    set fcc.Job_Reg_Qty = fcc.Job_Reg_Qty - :wRegQty,
+        fcc.Job_Reg_Amt = fcc.Job_Reg_Amt - :wRegAmt,
+        fcc.Job_Prem_Qty = fcc.Job_Prem_Qty - :wPremQty,
+        fcc.Job_Prem_Amt = fcc.Job_Prem_Amt - :wPremAmt
+    where fcc.Job_No_1 = old.Job_No_1
+      and fcc.Job_No_2 = old.Job_No_2
+      and fcc.FWO_No = old.FWO_No
+      and fcc.Job_Cost_Cat = old.Job_Cost_Cat;
+  update Sub_Job_File sjf
+    set sjf.Job_Reg_Amt = sjf.Job_Reg_Amt - :wRegAmt,
+        sjf.Job_Prem_Amt = sjf.Job_Prem_Amt - :wPremAmt
+    where sjf.Job_No_1 = old.Job_No_1
+      and sjf.Job_No_2 = old.Job_No_2
+      and sjf.Sub_Job_No = old.Sub_Job_No;  
+end
+ ^
+CREATE TRIGGER SUBCONTRACT_UPDATE FOR SUBCONTRACT                     
+ACTIVE AFTER UPDATE POSITION 0 
+AS
+BEGIN
+  if (old.SubContract_No <> new.SubContract_No) then
+    update SubContract_Detail sd
+      set sd.SubContract_No = new.SubContract_No
+      where sd.SubContract_No = old.SubContract_No;
+END
+ ^
+CREATE TRIGGER JOB_FILE_DELETE FOR JOB_FILE                        
+ACTIVE AFTER DELETE POSITION 0 
+as 
+begin
+  delete from Job_Fwo jf
+    where jf.Job_No_1 = old.Job_No_1
+      and jf.Job_No_2 = old.Job_No_2;
+
+  delete from Sub_Job_File sjf
+    where sjf.Job_No_1 = old.Job_No_1
+      and sjf.Job_No_2 = old.Job_No_2;
+
+  delete from Job_Claim jc
+    where jc.Job_No_1 = old.Job_No_1
+      and jc.Job_No_2 = old.Job_No_2;
+
+  delete from Subcontract sc
+    where sc.Job_No_1 = old.Job_No_1
+      and sc.Job_No_2 = old.Job_No_2;
+
+  delete from FWO_COST_CAT fcc
+    where fcc.Job_No_1 = old.Job_No_1
+      and fcc.Job_No_2 = old.Job_No_2;
+
+  delete from FWO_COST_CAT_PERCENT fccp
+    where fccp.Job_No_1 = old.Job_No_1
+      and fccp.Job_No_2 = old.Job_No_2;
+
+  delete from FWO_COST_ANALYSIS fca
+    where fca.Job_No_1 = old.Job_No_1
+      and fca.Job_No_2 = old.Job_No_2;
+
+  delete from Job_DETAIL jd
+    where jd.Job_No_1 = old.Job_No_1
+      and jd.Job_No_2 = old.Job_No_2;
+
+  delete from Job_FWO jf
+    where jf.Job_No_1 = old.Job_No_1
+      and jf.Job_No_2 = old.Job_No_2;
+end
+ ^
+CREATE TRIGGER JOB_FILE_UPDATE FOR JOB_FILE                        
+ACTIVE AFTER UPDATE POSITION 0 
+as 
+begin
+  if ((old.Job_No_1 <> new.Job_No_1) or
+     (old.Job_No_2 <> new.Job_No_2)) then
+  begin
+    update FWO_COST_CAT fcc
+      set fcc.Job_No_1 = new.Job_No_1,
+          fcc.Job_No_2 = new.Job_No_2
+    where fcc.Job_No_1 = old.Job_No_1
+      and fcc.Job_No_2 = old.Job_No_2;
+
+    update FWO_COST_CAT_PERCENT fccp
+      set fccp.Job_No_1 = new.Job_No_1,
+          fccp.Job_No_2 = new.Job_No_2
+    where fccp.Job_No_1 = old.Job_No_1
+      and fccp.Job_No_2 = old.Job_No_2;
+
+    update FWO_COST_ANALYSIS fca
+      set fca.Job_No_1 = new.Job_No_1,
+          fca.Job_No_2 = new.Job_No_2
+    where fca.Job_No_1 = old.Job_No_1
+      and fca.Job_No_2 = old.Job_No_2;
+
+    update Job_Fwo jf
+      set jf.Job_No_1 = new.Job_No_1,
+          jf.Job_No_2 = new.Job_No_2
+      where jf.Job_No_1 = old.Job_No_1
+        and jf.Job_No_2 = old.Job_No_2;
+
+    update Sub_Job_File sjf
+      set sjf.Job_No_1 = new.Job_No_1,
+          sjf.Job_No_2 = new.Job_No_2
+      where sjf.Job_No_1 = old.Job_No_1
+        and sjf.Job_No_2 = old.Job_No_2;
+
+    update Job_Claim jc
+      set jc.Job_No_1 = new.Job_No_1,
+          jc.Job_No_2 = new.Job_No_2
+      where jc.Job_No_1 = old.Job_No_1
+        and jc.Job_No_2 = old.Job_No_2;
+
+    update SubContract sc
+      set sc.Job_No_1 = new.Job_No_1,
+          sc.Job_No_2 = new.Job_No_2
+      where sc.Job_No_1 = old.Job_No_1
+        and sc.Job_No_2 = old.Job_No_2;
+
+    update Job_DETAIL jd
+      set jd.Job_No_1 = new.Job_No_1,
+          jd.Job_No_2 = new.Job_No_2
+      where jd.Job_No_1 = old.Job_No_1
+        and jd.Job_No_2 = old.Job_No_2; 
+  end
+end
+ ^
+CREATE TRIGGER JOB_FWO_DELETE FOR JOB_FWO                         
+ACTIVE AFTER DELETE POSITION 0 
+as 
+begin
+  delete from Job_FWO_Detail jfd
+    where jfd.Job_No_1 = old.Job_No_1
+      and jfd.Job_No_2 = old.Job_No_2
+      and jfd.FWO_No = old.FWO_No;
+
+  delete from FWO_COST_CAT fcc
+    where fcc.Job_No_1 = old.Job_No_1
+      and fcc.Job_No_2 = old.Job_No_2
+      and fcc.FWO_No = old.FWO_No;
+
+  delete from FWO_COST_CAT_PERCENT fccp
+    where fccp.Job_No_1 = old.Job_No_1
+      and fccp.Job_No_2 = old.Job_No_2
+      and fccp.FWO_No = old.FWO_No;
+
+end
+ ^
+CREATE TRIGGER SUB_JOB_FILE_DELETE FOR SUB_JOB_FILE                    
+ACTIVE AFTER DELETE POSITION 0 
+AS
+BEGIN
+  delete from Job_COST_CAT jcc
+    where jcc.Job_No_1 = old.Job_No_1
+      and jcc.Job_No_2 = old.Job_No_2
+      and jcc.sub_job_no = old.sub_job_no ;
+
+  delete from Job_detail jd
+    where jd.Job_No_1 = old.Job_No_1
+      and jd.Job_No_2 = old.Job_No_2
+      and jd.sub_job_no = old.sub_job_no ;
+
+  delete from Job_fwo jf
+    where jf.Job_No_1 = old.Job_No_1
+      and jf.Job_No_2 = old.Job_No_2
+      and jf.sub_job_no = old.sub_job_no ;
+
+  delete from Job_claim jc
+    where jc.Job_No_1 = old.Job_No_1
+      and jc.Job_No_2 = old.Job_No_2
+      and jc.sub_job_no = old.sub_job_no ;
+
+  delete from subcontract sc
+    where sc.Job_No_1 = old.Job_No_1
+      and sc.Job_No_2 = old.Job_No_2
+      and sc.sub_job_no = old.sub_job_no ;
+
+
+END
+ ^
+CREATE TRIGGER SUB_JOB_FILE_UPDATE FOR SUB_JOB_FILE                    
+ACTIVE BEFORE UPDATE POSITION 0 
+as
+declare variable wInt1 Integer;
+declare variable wInt2 Integer;
+begin
+  if ((old.job_no_1 <> new.job_no_1)
+     or (old.job_no_2 <> new.job_no_2)
+     or (old.sub_job_no <> new.sub_job_no)) then
+  begin
+    update Job_COST_CAT jcc
+      set jcc.Job_No_1 = new.Job_No_1,
+          jcc.Job_No_2 = new.Job_No_2,
+          jcc.sub_job_no = new.sub_job_no
+    where jcc.Job_No_1 = old.Job_No_1
+      and jcc.Job_No_2 = old.Job_No_2
+      and jcc.sub_job_no = old.sub_job_no ;
+
+    update Job_detail jd
+      set jd.Job_No_1 = new.Job_No_1,
+          jd.Job_No_2 = new.Job_No_2,
+          jd.sub_job_no = new.sub_job_no
+    where jd.Job_No_1 = old.Job_No_1
+      and jd.Job_No_2 = old.Job_No_2
+      and jd.sub_job_no = old.sub_job_no ;
+
+    update Job_fwo jf
+      set jf.Job_No_1 = new.Job_No_1,
+          jf.Job_No_2 = new.Job_No_2,
+          jf.sub_job_no = new.sub_job_no
+    where jf.Job_No_1 = old.Job_No_1
+      and jf.Job_No_2 = old.Job_No_2
+      and jf.sub_job_no = old.sub_job_no ;
+
+    update Job_claim jc
+      set jc.Job_No_1 = new.Job_No_1,
+          jc.Job_No_2 = new.Job_No_2,
+          jc.sub_job_no = new.sub_job_no
+    where jc.Job_No_1 = old.Job_No_1
+      and jc.Job_No_2 = old.Job_No_2
+      and jc.sub_job_no = old.sub_job_no ;
+
+    update subcontract sc
+      set sc.Job_No_1 = new.Job_No_1,
+          sc.Job_No_2 = new.Job_No_2,
+          sc.sub_job_no = new.sub_job_no
+    where sc.Job_No_1 = old.Job_No_1
+      and sc.Job_No_2 = old.Job_No_2
+      and sc.sub_job_no = old.sub_job_no ;
+  end
+end
+ ^
+COMMIT WORK ^
+SET TERM ; ^
+/* Grant permissions for this database */
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON ADJUST_JOB_DETAIL TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON FWO_CAT TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON FWO_COST_ANALYSIS TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON FWO_COST_CAT TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON FWO_COST_CAT_PERCENT TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON FWO_PRODUCTION TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON FWO_SUBPRODUCTION TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JCCONTROL TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JOB_CLAIM TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JOB_COST_CAT TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JOB_COST_FILE TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JOB_COST_TYPE TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JOB_DETAIL TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JOB_FILE TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JOB_FWO TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON JOB_FWO_DETAIL TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON LIBRARY_ITEM TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON PRODUCTION_CAT_FILE TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON PRODUCTION_STATUS TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON SUBCONTRACT TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON SUBCONTRACT_DETAIL TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON SUBCONTRACT_PAYMENT TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON SUB_JOB_FILE TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON TRADE TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON USER_PRODUCTION TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON VENDOR TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON VFWO_PRODUCTION_FINISH TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON VIEW_JOB_COST_CAT_BY_JOB TO PUBLIC;
+GRANT DELETE, INSERT, SELECT, UPDATE, REFERENCES ON WORK_GROUP TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_COST_CAT_TOT_BY_SUB_JOB TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_COST_CAT_VIEW_BY_JOB TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_DAILY_PRODUCTION TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_FWO_COST_CAT_TOT_BY_FWO TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_JOBNO TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_JOB_COST_CAT_BY_JOB TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_JOB_COST_CAT_TOT_BY_CAT TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_JOB_COST_CAT_TOT_BY_JOB TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_JOB_NO TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_JOB_PROGRESS TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_LAST_SUBPRODUCTION TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_PRODUCTION_STATUS TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_PROJECT_ITEM TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_SUB_FWO TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE GET_SUB_JOB_TOT_BY_JOB TO PUBLIC;
+GRANT EXECUTE ON PROCEDURE SET_JOB_PROGRESS TO PUBLIC;
